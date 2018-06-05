@@ -8,12 +8,10 @@
     },
     "license": "MIT",
     "autoload": {
-        "autoload": {
-            "psr-4": {
+        "psr-4": {
                 "SocialiteProviders\\EveOnline\\": "src/"
             }
-        }
-    },
+        },
     "authors": [
         {
             "name": "Craig Russell",
