@@ -1,0 +1,23 @@
+{
+    "name": "tenow/eve-sso",
+    "description": "SSO extension for EVE Online",
+    "type": "library",
+    "require": {
+        "socialiteproviders/manager": "^3.3",
+        "laravel/socialite": "^3.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "autoload": {
+            "psr-4": {
+                "SocialiteProviders\\EveOnline\\": "src/"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "Craig Russell",
+            "email": "tenowg@gmail.com"
+        }
+    ]
+}
