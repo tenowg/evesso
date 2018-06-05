@@ -1,5 +1,5 @@
 {
-    "name": "tenow/eve-sso",
+    "name": "tenowg/eve-sso",
     "description": "SSO extension for EVE Online",
     "type": "library",
     "require": {
