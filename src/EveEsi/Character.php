@@ -17,7 +17,8 @@ class Character {
         $this->commit_data = config('eve-sso.commit_data');
     }
 
-    public function getTitles(EveSSO $sso) {        
+    public function getTitles(EveSSO $sso) {
+            
         $uri = sprintf('characters/%s/titles/', $sso->character_id);
         return $this->esi->callEsiAuth($sso, $uri, []);
     }
