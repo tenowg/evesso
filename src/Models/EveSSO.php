@@ -24,6 +24,11 @@ class EveSSO extends EsiModel
         'expires',
         'character_id',
         'character_owner_hash',
+        'scopes'
+    ];
+
+    protected $casts = [
+        'scopes' => 'array'
     ];
 
     public function expired() {

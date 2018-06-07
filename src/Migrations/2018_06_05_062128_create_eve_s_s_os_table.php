@@ -21,6 +21,8 @@ class CreateEveSSOsTable extends Migration
             $table->integer('expires');
             $table->integer('character_id');
             $table->string('character_owner_hash');
+            $table->json('scopes');
+            $table->string('avatar')->nullable();
             $table->timestamps();
 
             $table->primary('character_id');
