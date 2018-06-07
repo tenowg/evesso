@@ -31,4 +31,8 @@ class EveSSO extends EsiModel
         $expires_at = $updated->copy()->addSeconds($this->expires - 10);
         return $expires_at->lt(new Carbon());
     }
+
+    public function characterPublic() {
+        return $this->hasMany('EveSSO\CharacterPublic', 'character_id', 'character_id');
+    }
 }
