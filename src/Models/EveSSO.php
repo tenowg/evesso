@@ -19,7 +19,6 @@ use Carbon\Carbon;
  * @property string|null $avatar
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterPublic[] $characterPublic
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereAccessToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereCharacterId($value)
@@ -31,6 +30,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereScopes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \EveSSO\CharacterPublic $characterPublic
  */
 class EveSSO extends EsiModel
 {
@@ -72,6 +72,6 @@ class EveSSO extends EsiModel
     }
 
     public function characterPublic() {
-        return $this->hasMany('EveSSO\CharacterPublic', 'character_id', 'character_id');
+        return $this->hasOne('EveSSO\CharacterPublic', 'character_id', 'character_id');
     }
 }
