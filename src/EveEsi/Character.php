@@ -18,12 +18,20 @@ class Character {
     }
 
     public function getTitles(EveSSO $sso) {
-            
-        $uri = sprintf('characters/%s/titles/', $sso->character_id);
-        return $this->esi->callEsiAuth($sso, $uri, []);
+        if (in_array('', $sso->scopes)) {
+
+            $uri = sprintf('characters/%s/titles/', $sso->character_id);
+            return $this->esi->callEsiAuth($sso, $uri, []);
+        }
+        
+        throw new Exception('User failed with out scope');
     }
 
     public function getCharacterPublic($character_id) {
+        if ($character_id instanceof EveSSO) {
+            $character_id = $character_id->character_id;
+        }
+        
         $uri = sprintf('characters/%s/', $character_id);
 
         $return = $this->esi->callEsi($uri, []);

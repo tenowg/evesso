@@ -57,6 +57,13 @@ class EveSSO extends EsiModel
         'scopes' => 'array'
     ];
 
+    protected $hidden = [
+        'access_token',
+        'refresh_token',
+        'character_owner_hash',
+        'expires'
+    ];
+
     public function expired() {
         $updated = new Carbon($this->updated_at);
         $expires_at = $updated->copy()->addSeconds($this->expires - 10);

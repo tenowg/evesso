@@ -58,42 +58,6 @@ class Esi {
         return json_decode($res->getBody(), true);
     }
 
-    // public function getTitles($userOrApplicant = null) {        
-    //     if (!$userOrApplicant) {
-    //         $userOrApplicant = \Auth::user();
-    //     }
-
-    //     $this->checkExpired($userOrApplicant);
-
-    //     $uri = sprintf('characters/%s/titles/', $userOrApplicant->character_id);
-
-    //     if ($userOrApplicant instanceof User) {
-    //         return $this->callEsiAuth($userOrApplicant->tokens->access_token, $uri, []);
-    //     } else {
-    //         return $this->callEsiAuth($userOrApplicant->access_token, $uri, []);
-    //     }
-    // }
-
-    // /**
-    //  * character_id can remain null, if you want to use logged in user
-    //  */
-    // public function getCharacterPublic($character_id = null, $access_token = null) {
-    //     if (!$character_id) {
-    //         $user = \Auth::user();
-    //         $character_id = $user->character_id;
-    //     }
-
-    //     $uri = sprintf('characters/%s/', $character_id);
-
-    //     return $this->callEsi($uri, []);
-    // }
-
-    // public function getCharacterMail($character_id, $access_token) {
-    //     $uri = sprintf('characters/%s/mail/', $character_id);
-
-    //     return $this->callEsiAuth($access_token, $uri, []);
-    // }
-
     public function getCharacterBalance($character_id, $access_token) {
         $uri = sprintf('characters/%s/wallet/', $character_id);
 
