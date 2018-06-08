@@ -50,7 +50,8 @@ class EveSSO extends EsiModel
         'expires',
         'character_id',
         'character_owner_hash',
-        'scopes'
+        'scopes',
+        'avatar'
     ];
 
     protected $casts = [
