@@ -2,31 +2,58 @@
 
 namespace EveEsi;
 
+use EveEsi\BaseEsi;
 use EveEsi\Esi;
+use EveSSO\EsiExpireTimes;
 use EveSSO\EveSSO;
 use EveSSO\CharacterPublic;
 use Carbon\Carbon;
 
-class Character {
+class Character extends BaseEsi {
+    /**
+     * @var Esi
+     */
     private $esi;
-    private $commit_data;
-    private $cache = 3600;
+
+    /**
+     * @var boolean
+     */
+    // private $commit_data;
 
     public function __construct(Esi $e) {
         $this->esi = $e;
-        $this->commit_data = config('eve-sso.commit_data');
+        parent::__construct();
     }
 
+    /**
+     * requires scope: esi-characters.read_titles.v1
+     */
     public function getTitles(EveSSO $sso) {
-        if (in_array('', $sso->scopes)) {
-
+        if ($this->hasScope($sso, 'esi-characters.read_titles.v1')) {
+            $public = $this->getCharacterPublic($sso);
             $uri = sprintf('characters/%s/titles/', $sso->character_id);
+            if ($this->commit_data) {
+                $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_titles-' . $sso->character_id]);
+                if ($expires->expired()) {
+                    $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+                    if (!$return) {
+                        return $public->titles;
+                    } else {
+                        $public->titles = $return;
+                        $public->save();
+                        return $public->titles;
+                    }
+                }
+            }
             return $this->esi->callEsiAuth($sso, $uri, []);
         }
-        
-        throw new Exception('User failed with out scope');
+
+        return [];
     }
 
+    /**
+     * @return CharacterPublic 
+     */
     public function getCharacterPublic($character_id) {
         if ($character_id instanceof EveSSO) {
             $character_id = $character_id->character_id;
@@ -39,8 +66,8 @@ class Character {
             // First get the existing if it exists
             $character = CharacterPublic::find($character_id);
             if ($character != null) {
-                $expires_at = $character->updated_at->copy()->addSeconds($this->cache - 10);
-                if ($expires_at->gt(new Carbon())) {
+                // $expires_at = $character->updated_at->copy()->addSeconds(3600 - 10);
+                if (!$character->expired()) {
                     return $character;
                 }
                 // update the entry

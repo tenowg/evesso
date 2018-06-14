@@ -4,11 +4,15 @@ namespace tenowg\EveSSO\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use EveEsi\Character;
+use EveEsi\Contracts;
+use EveEsi\Mail;
 
 class EveEsiServiceProvider extends ServiceProvider
 {
     public $bindings = [
         EveEsi\Character::class => EveEsi\Character::class,
+        EveEsi\Contracts::class => EveEsi\Contracts::class,
+        EveEsi\Mail::class => EveEsi\Mail::class,
     ];
 
     public $singletons = [

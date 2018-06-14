@@ -9,6 +9,7 @@ use App\Applicant;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use EveSSO\EveSSO;
+use EveSSO\EsiExpireTimes;
 
 class Esi {
     private $base_url;
@@ -27,7 +28,10 @@ class Esi {
         }
     }
 
-    public function callEsiAuth(EveSSO $user, $uri, array $params) {
+    /**
+     * @return boolean || object (boolean false will indicate Etag)
+     */
+    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null) {
         $this->checkExpired($user);
 
         $client = new Client();
@@ -37,10 +41,25 @@ class Esi {
             'Authorization' => 'Bearer ' . $user->access_token
         );
 
+        if ($etag != null) {
+            $headers['If-None-Match'] = $etag->etag;
+        }
+
         $options = array('headers' => $headers, 'query' => $params);
 
         $res = $client->request('GET', $this->base_url . $uri, $options);
         
+        $status = $res->getStatusCode();
+        if ($status == 304 && $etag != null) {
+            $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));
+            $etag->save();
+            return false;
+        } else if ($etag != null) {
+            $etag->etag = $res->getHeader('ETag')[0]; // get headers...
+            $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));
+            $etag->save();
+        }
+
         return json_decode($res->getBody(), true);
     }
 

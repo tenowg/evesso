@@ -4,6 +4,7 @@ namespace EveSSO;
 
 use Illuminate\Database\Eloquent\Model;
 use EveSSO\EsiModel;
+use Carbon\Carbon;
 
 /**
  * EveSSO\CharacterPublic
@@ -37,6 +38,8 @@ use EveSSO\EsiModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterPublic whereSecurityStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterPublic whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $titles
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterPublic whereTitles($value)
  */
 class CharacterPublic extends EsiModel
 {
@@ -52,10 +55,23 @@ class CharacterPublic extends EsiModel
         'gender',
         'name',
         'race_id',
-        'security_status'
+        'security_status',
+        'titles'
+    ];
+
+    protected $casts = [
+        'titles' => 'array'
     ];
 
     protected $primaryKey = 'character_id';
     public $incrementing = false;
     protected $table = 'character_public';
+
+    /**
+     * @return boolean
+     */
+    public function expired() {
+        $expires_at = $this->updated_at->copy()->addSeconds(3600);
+        return $expires_at->lt(new Carbon());
+    }
 }

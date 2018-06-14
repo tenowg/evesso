@@ -27,6 +27,7 @@ class AddCharacterPublic extends Migration
             $table->string('name');
             $table->integer('race_id');
             $table->float('security_status', 8, 5);
+            $table->json('titles')->default('[]');
             $table->timestamps();
 
             $table->primary('character_id');

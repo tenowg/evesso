@@ -2,13 +2,15 @@
 
 namespace EveEsi;
 
+use EveEsi\BaseEsi;
 use EveEsi\Esi;
 use EveSSO\EveSSO;
 
-class Mail {
+class Mail extends BaseEsi {
     private $esi;
 
     public function __construct(Esi $e) {
+        parent::__construct();
         $this->esi = $e;
     }
 
