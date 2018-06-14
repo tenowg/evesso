@@ -68,16 +68,20 @@ class Provider extends AbstractProvider implements ProviderInterface
     }
 
     public function handleDatabase($user) {
-        EveSSO::firstOrUpdate([
-            'name' => $user->name, 
-            'access_token' => $user->token, 
-            'refresh_token' => $user->refreshToken == null ? '' : $user->refreshToken,
-            'expires' => $user->expiresIn,
-            'character_id' => $user->user['CharacterID'],
-            'character_owner_hash' => $user->user['CharacterOwnerHash'],
-            'scopes' => explode(' ', $user->user['Scopes']),
-            'avatar' => $user->avatar
-        ]);
+        return EveSSO::updateOrCreate(
+            [
+                'character_id' => $user->user['CharacterID']
+            ],
+            [
+                'name' => $user->name, 
+                'access_token' => $user->token, 
+                'refresh_token' => $user->refreshToken == null ? '' : $user->refreshToken,
+                'expires' => $user->expiresIn,
+                'character_owner_hash' => $user->user['CharacterOwnerHash'],
+                'scopes' => explode(' ', $user->user['Scopes']),
+                'avatar' => $user->avatar
+            ]
+        );
     }
 
     /**
