@@ -27,7 +27,7 @@ class EveEsiServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__."/../config/eve-sso.php" => config_path('eve-sso.php'),
+            __DIR__."/../Config/eve-sso.php" => config_path('eve-sso.php'),
         ]);
 
         $this->loadMigrationsFrom(__DIR__.'/../Migrations');
@@ -40,6 +40,6 @@ class EveEsiServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom( __DIR__.'/../config/eve-sso.php', 'eve-sso');
+        $this->mergeConfigFrom( __DIR__.'/../Config/eve-sso.php', 'eve-sso');
     }
 }

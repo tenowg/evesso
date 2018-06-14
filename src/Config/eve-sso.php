@@ -5,5 +5,6 @@ return [
     'baseurl' => 'https://esi.evetech.net/latest/',
     'useragent' => 'Eve ESI Laravel package (Jenny Dawn)',
     'commit_data' => true,
-    'scopes' => []
+    'scopes' => [],
+    'main_host' => false
 ];

@@ -6,6 +6,8 @@ use Laravel\Socialite\Two\ProviderInterface;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
 
+use EveSSO\EveSSO;
+
 class Provider extends AbstractProvider implements ProviderInterface
 {
     /**
@@ -63,6 +65,19 @@ class Provider extends AbstractProvider implements ProviderInterface
 		$this->credentialsResponseBody = json_decode( $response->getBody(), true );
 
         return $this->credentialsResponseBody['access_token'];
+    }
+
+    public function handleDatabase($user) {
+        EveSSO::firstOrUpdate([
+            'name' => $user->name, 
+            'access_token' => $user->token, 
+            'refresh_token' => $user->refreshToken == null ? '' : $user->refreshToken,
+            'expires' => $user->expiresIn,
+            'character_id' => $user->user['CharacterID'],
+            'character_owner_hash' => $user->user['CharacterOwnerHash'],
+            'scopes' => explode(' ', $user->user['Scopes']),
+            'avatar' => $user->avatar
+        ]);
     }
 
     /**

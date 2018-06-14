@@ -14,14 +14,16 @@ class CreateEsiExpireTimesTable extends Migration
     public function up()
     {
         $connection = config('eve-sso.database');
-        Schema::connection($connection)->create('esi_expire_times', function (Blueprint $table) {
-            $table->string('esi_name');
-            $table->integer('expires')->default(-100);
-            $table->string('etag')->default('');
-            $table->timestamps();
+        if (!Schema::connection($connection)->hasTable('esi_expire_times')) {
+            Schema::connection($connection)->create('esi_expire_times', function (Blueprint $table) {
+                $table->string('esi_name');
+                $table->integer('expires')->default(-100);
+                $table->string('etag')->default('');
+                $table->timestamps();
 
-            $table->primary('esi_name');
-        });
+                $table->primary('esi_name');
+            });
+        }
     }
 
     /**
@@ -32,6 +34,9 @@ class CreateEsiExpireTimesTable extends Migration
     public function down()
     {
         $connection = config('eve-sso.database');
-        Schema::connection($connection)->dropIfExists('esi_expire_times');
+        $main = config('eve-sso.main_host');
+        if ($main && Schema::connection($connection)->hasTable('esi_expire_times')) {
+            Schema::connection($connection)->dropIfExists('esi_expire_times');
+        }
     }
 }

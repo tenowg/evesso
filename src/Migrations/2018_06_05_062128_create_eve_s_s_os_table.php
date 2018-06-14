@@ -14,19 +14,21 @@ class CreateEveSSOsTable extends Migration
     public function up()
     {
         $connection = config('eve-sso.database');
-        Schema::connection($connection)->create('eve_ssos', function (Blueprint $table) {
-            $table->string('name');
-            $table->string('access_token');
-            $table->string('refresh_token');
-            $table->integer('expires');
-            $table->integer('character_id');
-            $table->string('character_owner_hash');
-            $table->json('scopes');
-            $table->string('avatar')->nullable();
-            $table->timestamps();
+        if (!Schema::connection($connection)->hasTable('eve_ssos')) {
+            Schema::connection($connection)->create('eve_ssos', function (Blueprint $table) {
+                $table->string('name');
+                $table->string('access_token');
+                $table->string('refresh_token');
+                $table->integer('expires');
+                $table->integer('character_id');
+                $table->string('character_owner_hash');
+                $table->json('scopes');
+                $table->string('avatar')->nullable();
+                $table->timestamps();
 
-            $table->primary('character_id');
-        });
+                $table->primary('character_id');
+            });
+        }
     }
 
     /**
@@ -37,6 +39,9 @@ class CreateEveSSOsTable extends Migration
     public function down()
     {
         $connection = config('eve-sso.database');
-        Schema::connection($connection)->dropIfExists('eve_ssos');
+        $main = config('eve-sso.main_host');
+        if ($main && Schema::connection($connection)->hasTable('eve_ssos')) {
+            Schema::connection($connection)->dropIfExists('eve_ssos');
+        }
     }
 }
