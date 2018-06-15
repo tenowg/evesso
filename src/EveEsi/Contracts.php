@@ -57,9 +57,8 @@ class Contracts extends BaseEsi {
                                 }
                                 $contract['date_expired'] = new Carbon($contract['date_expired']);
                                 $contract['date_issued'] = new Carbon($contract['date_issued']);
-                                array_push($contracts, CorporationContract::updateOrCreate($contract));
+                                array_push($contracts, CorporationContract::updateOrCreate(['contract_id' => $contract['contract_id']], $contract));
                             }
-                            dd('hmmm...', $contracts);
                             return $contracts;
                         }
                     } else {
