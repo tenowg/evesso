@@ -4,6 +4,11 @@ namespace EveSSO;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * EveSSO\PersonalContract
+ *
+ * @mixin \Eloquent
+ */
 class PersonalContract extends Model
 {
     protected $fillable = [
