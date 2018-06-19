@@ -31,7 +31,7 @@ class Esi {
     /**
      * @return boolean || object (boolean false will indicate Etag)
      */
-    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null) {
+    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null, string $method = 'GET') {
         $this->checkExpired($user);
 
         $client = new Client();
@@ -47,7 +47,7 @@ class Esi {
 
         $options = array('headers' => $headers, 'query' => $params);
 
-        $res = $client->request('GET', $this->base_url . $uri, $options);
+        $res = $client->request($method, $this->base_url . $uri, $options);
         
         $status = $res->getStatusCode();
         if ($status == 304 && $etag != null) {

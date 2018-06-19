@@ -13,6 +13,7 @@ class EveEsiServiceProvider extends ServiceProvider
         EveEsi\Character::class => EveEsi\Character::class,
         EveEsi\Contracts::class => EveEsi\Contracts::class,
         EveEsi\Mail::class => EveEsi\Mail::class,
+        EveEsi\Contacts::class => EveEsi\Contacts::class,
     ];
 
     public $singletons = [

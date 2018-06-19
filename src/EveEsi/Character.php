@@ -9,6 +9,8 @@ use EveSSO\EveSSO;
 use EveSSO\CharacterPublic;
 use Carbon\Carbon;
 
+use EveEsi\Scopes;
+
 class Character extends BaseEsi {
     /**
      * @var Esi
@@ -29,7 +31,7 @@ class Character extends BaseEsi {
      * requires scope: esi-characters.read_titles.v1
      */
     public function getTitles(EveSSO $sso) {
-        if ($this->hasScope($sso, 'esi-characters.read_titles.v1')) {
+        if ($this->hasScope($sso, Scopes::READ_CHARACTER_TITLES)) {
             $public = $this->getCharacterPublic($sso);
             $uri = sprintf('characters/%s/titles/', $sso->character_id);
             if ($this->commit_data) {
@@ -66,7 +68,6 @@ class Character extends BaseEsi {
             // First get the existing if it exists
             $character = CharacterPublic::find($character_id);
             if ($character != null) {
-                // $expires_at = $character->updated_at->copy()->addSeconds(3600 - 10);
                 if (!$character->expired()) {
                     return $character;
                 }
