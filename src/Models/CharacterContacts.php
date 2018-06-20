@@ -2,7 +2,6 @@
 
 namespace EveSSO;
 
-use Illuminate\Database\Eloquent\Model;
 use EveSSO\EsiModel;
 
 /**
@@ -33,7 +32,6 @@ use EveSSO\EsiModel;
 class CharacterContacts extends EsiModel
 {
     protected $table = 'character_contacts';
-    // protected $primaryKey = 'contact_id';
     public $incrementing = true;
 
     protected $fillable = [

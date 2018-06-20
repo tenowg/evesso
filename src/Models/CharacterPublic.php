@@ -2,7 +2,6 @@
 
 namespace EveSSO;
 
-use Illuminate\Database\Eloquent\Model;
 use EveSSO\EsiModel;
 use Carbon\Carbon;
 

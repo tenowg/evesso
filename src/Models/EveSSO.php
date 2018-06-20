@@ -2,7 +2,6 @@
 
 namespace EveSSO;
 
-use Illuminate\Database\Eloquent\Model;
 use EveSSO\EsiModel;
 use Carbon\Carbon;
 
@@ -31,6 +30,9 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \EveSSO\CharacterPublic $characterPublic
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterContacts[] $contacts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\PersonalContract[] $contracts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\MailHeader[] $mailheaders
  */
 class EveSSO extends EsiModel
 {
@@ -73,5 +75,17 @@ class EveSSO extends EsiModel
 
     public function characterPublic() {
         return $this->hasOne('EveSSO\CharacterPublic', 'character_id', 'character_id');
+    }
+
+    public function contacts() {
+        return $this->hasMany('EveSSO\CharacterContacts', 'character_id', 'character_id');
+    }
+
+    public function contracts() {
+        return $this->hasMany('EveSSO\PersonalContract', 'character_id', 'character_id');
+    }
+
+    public function mailheaders() {
+        return $this->hasMany('EveSSO\MailHeader', 'character_id', 'character_id');
     }
 }
