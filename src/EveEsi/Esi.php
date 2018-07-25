@@ -31,7 +31,7 @@ class Esi {
     /**
      * @return boolean || object (boolean false will indicate Etag)
      */
-    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null, string $method = 'GET') {
+    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null, string $method = 'GET', $body = null) {
         $this->checkExpired($user);
 
         $client = new Client();
@@ -41,11 +41,17 @@ class Esi {
             'Authorization' => 'Bearer ' . $user->access_token
         );
 
+        
         if ($etag != null) {
             $headers['If-None-Match'] = $etag->etag;
         }
 
+
         $options = array('headers' => $headers, 'query' => $params);
+
+        if ($body != null) {
+            $options['json'] = $body;
+        }
 
         $res = $client->request($method, $this->base_url . $uri, $options);
         

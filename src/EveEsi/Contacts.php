@@ -9,6 +9,7 @@ use EveSSO\EveSSO;
 use EveSSO\CharacterPublic;
 use Carbon\Carbon;
 use EveSSO\CharacterContacts;
+use EveSSO\Exceptions\InvalidScopeException;
 
 use EveEsi\Scopes;
 
@@ -47,13 +48,13 @@ class Contacts extends BaseEsi {
 
         $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
         if (!$return) {
-            return PersonalContract::whereCharacterId($sso->character_id)->get()->toArray();
+            return CharacterContacts::whereCharacterId($sso->character_id)->get()->toArray();
         }
 
         $contracts = array();
         foreach($return as $contact) {
             $contact['character_id'] = $sso->character_id;
-            array_push($contracts, PersonalContract::updateOrCreate(['contact_id' => $contact['contact_id'], 'character_id' => $sso->character_id], $contract));
+            array_push($contracts, CharacterContacts::updateOrCreate(['contact_id' => $contact['contact_id'], 'character_id' => $sso->character_id], $contract));
         }
         return $contracts;
     }

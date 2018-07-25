@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use EveEsi\Character;
 use EveEsi\Contracts;
 use EveEsi\Mail;
+use EveEso\Assets;
 
 class EveEsiServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,7 @@ class EveEsiServiceProvider extends ServiceProvider
         EveEsi\Contracts::class => EveEsi\Contracts::class,
         EveEsi\Mail::class => EveEsi\Mail::class,
         EveEsi\Contacts::class => EveEsi\Contacts::class,
+        EveEsi\Assets::class => EveEsi\Assets::class,
     ];
 
     public $singletons = [
