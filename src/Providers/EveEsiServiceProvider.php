@@ -29,8 +29,10 @@ class EveEsiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadViewsaFrom(__DIR__.'/../Views', 'evesso');
         $this->publishes([
             __DIR__."/../Config/eve-sso.php" => config_path('eve-sso.php'),
+            __DIR__."/../Views" => resource_path('views/vendor/evesso'),
         ]);
 
         $this->loadMigrationsFrom(__DIR__.'/../Migrations');

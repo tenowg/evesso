@@ -7,6 +7,9 @@ use EveEsi\Esi;
 use EveEsi\Character;
 use EveSSO\EveSSO;
 use EveSSO\MailHeader;
+use EveEsi\Scopes;
+
+use EveSSO\Exceptions\InvalidScopeException;
 
 use Carbon\Carbon;
 
@@ -32,10 +35,9 @@ class Mail extends BaseEsi {
      * method: get
      */
     public function getMailHeaders(EveSSO $sso) {
-        if (!$this->hasScope($sso, 'esi-mail.read_mail.v1')) {
-            return [];
+        if (!$this->hasScope($sso, Scopes::MAIL_READ)) {
+            throw new InvalidScopeException();
         }
-
 
         $uri = sprintf('characters/%s/mail/', $sso->character_id);
 
@@ -68,14 +70,25 @@ class Mail extends BaseEsi {
      * scopes required: esi-mail.send_mail.v1
      * method: post
      */
-    public function sendMail(EveSSO $sso) {
-        if (!$this->hasScope($sso, 'esi-mail.send_mail.v1')) {
-            return -1;
+    public function sendMail(EveSSO $sso, string $body, string $subject, int $approved_cspa = 0, EveSSO ...$recipients) {
+        if (!$this->hasScope($sso, Scopes::MAIL_SEND)) {
+            throw new InvalidScopeException();
         }
 
+        $res = [];
+        foreach($recipients as $recipient) {
+            array_push($res, new Recipient($recipient));
+        }
+
+        $mail = new Mail();
+        $mail->recipients = $res;
+        $mail->body = $body;
+        $mail->approved_cost = $approved_cspa;
+        $mail->subject = $subject;
+        
         $uri = sprintf('characters/%s/mail/', $sso->character_id);
 
-        return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST');
+        return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $mail);
     }
 
     /**
@@ -83,8 +96,8 @@ class Mail extends BaseEsi {
      * method: delete
      */
     public function deleteMail(EveSSO $sso, number $mail_id) {
-        if (!$this->hasScope($sso, 'esi-mail.organize_mail.v1')) {
-            return false;
+        if (!$this->hasScope($sso, Scopes::MAIL_ORGANIZE)) {
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/%s/', $sso->character_id, $mail_id);
@@ -97,8 +110,8 @@ class Mail extends BaseEsi {
      * method: get
      */
     public function getMail(EveSSO $sso, number $mail_id) {
-        if (!$this->hasScope($sso, 'esi-mail.read_mail.v1')) {
-            return null;
+        if (!$this->hasScope($sso, Scopes::MAIL_READ)) {
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/%s/', $sso->character_id, $mail_id);
@@ -111,8 +124,8 @@ class Mail extends BaseEsi {
      * method: put
      */
     public function updateMail(EveSSO $sso, number $mail_id) {
-        if (!$this->hasScope($sso, 'esi-mail.organize_mail.v1')) {
-            return false;
+        if (!$this->hasScope($sso, Scopes::MAIL_ORGANIZE)) {
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/%s/', $sso->character_id, $mail_id);
@@ -126,8 +139,8 @@ class Mail extends BaseEsi {
      * method: get
      */
     public function getMailLabels(EveSSO $sso) {
-        if (!$this->hasScope($sso, 'esi-mail.read_mail.v1')) {
-            return [];
+        if (!$this->hasScope($sso, Scopes::MAIL_READ)) {
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/labels/', $sso->character_id);
@@ -140,8 +153,8 @@ class Mail extends BaseEsi {
      * method: post
      */
     public function createMailLabel(EveSSO $sso) {
-        if (!$this->hasScope($sso, 'esi-mail.organize_mail.v1')) {
-            return -1;
+        if (!$this->hasScope($sso, Scopes::MAIL_ORGANIZE)) {
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/labels/', $sso->character_id);
@@ -155,7 +168,7 @@ class Mail extends BaseEsi {
      */
     public function deleteMailLabel(EveSSO $sso, number $label_id) {
         if (!$this->hasScope($sso, 'esi-mail.organize_mail.v1')) {
-            return false;
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/labels/%s/', $sso->character_id);
@@ -170,11 +183,27 @@ class Mail extends BaseEsi {
      */
     public function getMailLists(EveSSO $sso) {
         if (!$this->hasScope($sso, 'esi-mail.read_mail.v1')) {
-            return [];
+            throw new InvalidScopeException();
         }
 
         $uri = sprintf('characters/%s/mail/lists/', $sso->character_id);
 
         return $this->esi->callEsiAuth($sso, $uri, []);
     }
+}
+
+class Recipient {
+    public $recipient_id = 0;
+    public $recipient_type = 'character';
+
+    public function __construct(EveSSO $sso) {
+        $this->recipient_id = $sso->character_id;
+    }
+}
+
+class Mail {
+    public $approved_cost = 0;
+    public $body = '';
+    public $recipients = [];
+    public $subject = '';
 }

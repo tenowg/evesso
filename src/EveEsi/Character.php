@@ -10,6 +10,7 @@ use EveSSO\CharacterPublic;
 use Carbon\Carbon;
 
 use EveEsi\Scopes;
+use EveSSO\Exceptions\InvalidScopeException;
 
 class Character extends BaseEsi {
     /**
@@ -98,5 +99,20 @@ class Character extends BaseEsi {
             return $character;
         }
         return $return;
+    }
+
+    public function getCspa(EveSSO $sso, EveSSO ...$receivers) {
+        if ($this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
+            throw new InvalidScopeException();
+        }
+
+        $receiver_ids = [];
+        foreach($receivers as $receiver) {
+            array_push($receiver_ids, $receiver->character_id);
+        }
+
+        $url = sprintf("characters/%s/cspa/", $sso->character_id);
+
+        return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $receiver_ids);
     }
 }
