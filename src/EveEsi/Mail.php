@@ -80,7 +80,7 @@ class Mail extends BaseEsi {
             array_push($res, new Recipient($recipient));
         }
 
-        $mail = new Mail();
+        $mail = new EMail();
         $mail->recipients = $res;
         $mail->body = $body;
         $mail->approved_cost = $approved_cspa;
@@ -201,7 +201,7 @@ class Recipient {
     }
 }
 
-class Mail {
+class EMail {
     public $approved_cost = 0;
     public $body = '';
     public $recipients = [];
