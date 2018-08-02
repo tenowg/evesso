@@ -111,7 +111,7 @@ class Character extends BaseEsi {
             array_push($receiver_ids, $receiver->character_id);
         }
 
-        $url = sprintf("characters/%s/cspa/", $sso->character_id);
+        $uri = sprintf("characters/%s/cspa/", $sso->character_id);
 
         return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $receiver_ids);
     }
