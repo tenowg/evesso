@@ -102,7 +102,7 @@ class Character extends BaseEsi {
     }
 
     public function getCspa(EveSSO $sso, EveSSO ...$receivers) {
-        if ($this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
+        if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
             throw new InvalidScopeException();
         }
 
