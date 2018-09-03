@@ -99,7 +99,7 @@ class Contracts extends BaseEsi {
         if ($public instanceof CharacterPublic) {
             $uri = sprintf('corporations/%s/contracts/', $public->corporation_id);
             
-            if ($this->commit_data) {
+            if (!$this->commit_data) {
                 return $this->esi->callEsiAuth($sso, $uri, []);
             }
             
