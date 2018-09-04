@@ -6,6 +6,7 @@ use EveSSO\EsiModel;
 
 class CorporationPublic extends EsiModel
 {
+    protected $table = "corporation_public";
     protected $primaryKey = 'corporation_id';
     public $incrementing = false;
 

@@ -6,6 +6,7 @@ use EveSSO\EsiModel;
 
 class CorporationBlueprints extends EsiModel
 {
+    protected $table = "corporation_blueprints";
     protected $primaryKey = 'item_id';
     public $incrementing = false;
 
