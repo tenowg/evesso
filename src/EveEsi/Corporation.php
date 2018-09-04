@@ -80,11 +80,11 @@ class Corporation extends BaseEsi {
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_blueprints-' . $sso->characterPublic->corporation_id]);
 
-        if (!$expires->expired()) {
-            return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
-        }
+        // if (!$expires->expired()) {
+        //     return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        // }
         
-        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, []);
 
         if (!$return) {
             return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
