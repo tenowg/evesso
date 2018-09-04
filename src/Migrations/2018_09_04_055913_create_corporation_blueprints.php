@@ -17,7 +17,7 @@ class CreateCorporationBlueprints extends Migration
         if (!Schema::connection($connection)->hasTable('corporation_blueprints')) {
             Schema::connection($connection)->create('corporation_blueprints', function (Blueprint $table) {
                 $table->integer('corporation_id');
-                $table->bigIinteger('item_id');
+                $table->bigInteger('item_id');
                 $table->string('location_flag');
                 $table->bigInteger('location_id');
                 $table->integer('material_efficiency');
