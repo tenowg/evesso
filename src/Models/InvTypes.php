@@ -9,6 +9,10 @@ class InvTypes extends EsiModel
     protected $primaryKey = 'type_id';
     public $incrementing = false;
     protected $table = 'inv_types';
+    protected $casts = [
+        'dogma_attributes' => 'array',
+        'domga_effects' => 'array'
+    ];
 
     protected $fillable = [
         'capacity',
@@ -28,6 +32,4 @@ class InvTypes extends EsiModel
         'type_id',
         'volume'
     ];
-
-
 }

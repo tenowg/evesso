@@ -64,7 +64,11 @@ class Esi {
             $etag->save();
         }
 
-        $max_pages = +$res->getHeader('X-Pages')[0] ?: 1;
+        $x_pages = $res->getHeader('X_Pages');
+        $max_pages = 0;
+        if ($x_pages) {
+            $max_pages = +$x_pages[0] ?: 1;
+        }
         $body_res = json_decode($res->getBody(), true);
 
         // recursive calls
