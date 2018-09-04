@@ -92,7 +92,8 @@ class Corporation extends BaseEsi {
 
         $blueprints = array();
         foreach($return as $blueprint) {
-            array_push($blueprints, CorporationBlueprints::updateOrCreate(['corporation_id' => $sso->characterPublic->corporation_id], $blueprint));
+            $blueprint['corporation_id'] = $sso->characterPublic->corporation_id;
+            array_push($blueprints, CorporationBlueprints::updateOrCreate(['item_id' => $blueprint['item_id']], $blueprint));
         }
 
         return $blueprints;
