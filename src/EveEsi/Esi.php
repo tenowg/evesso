@@ -41,11 +41,9 @@ class Esi {
             'Authorization' => 'Bearer ' . $user->access_token
         );
 
-        
         if ($etag != null) {
             $headers['If-None-Match'] = $etag->etag;
         }
-
 
         $options = array('headers' => $headers, 'query' => $params);
 
@@ -54,7 +52,7 @@ class Esi {
         }
 
         $res = $client->request($method, $this->base_url . $uri, $options);
-        
+
         $status = $res->getStatusCode();
         if ($status == 304 && $etag != null) {
             $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));
@@ -66,7 +64,18 @@ class Esi {
             $etag->save();
         }
 
-        return json_decode($res->getBody(), true);
+        $max_pages = $res->getHeader('X-Pages') ?: 1;
+        $body = json_decode($res->getBody(), true);
+
+        // recursive calls
+        for ($page = 1; $page < $max_pages; $page++) {
+            $new_params = array_merge($param, ['page', $page + 1]);
+            $res_page = $this->callEsiAuth($user, $uri, $new_params);
+            $res_body = json_decode($res_page->getBody(), true);
+            $body = array_merge($body, $res_body);
+        }
+
+        return $body;
     }
 
     public function callEsi($uri, array $params) {
