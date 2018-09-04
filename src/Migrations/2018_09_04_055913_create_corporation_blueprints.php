@@ -25,6 +25,7 @@ class CreateCorporationBlueprints extends Migration
                 $table->integer('runs');
                 $table->integer('time_efficiency');
                 $table->integer('type_id');
+                $table->timestamps();
 
                 $table->primary('item_id');
             });

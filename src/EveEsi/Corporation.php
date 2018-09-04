@@ -72,7 +72,7 @@ class Corporation extends BaseEsi {
     }
 
     public function getCorporationBlueprints(EveSSO $sso) {
-        $uri = sprintf('corporations/%s/', $sso->characterPublic->corporation_id);
+        $uri = sprintf('corporations/%s/blueprints/', $sso->characterPublic->corporation_id);
 
         if (!$this->commit_data) {
             return $this->esi->callEsi($uri, []);
