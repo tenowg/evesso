@@ -39,7 +39,7 @@ class Corporation extends BaseEsi {
 
     public function getCharacterCorporationPublic(EveSSO $sso) {
         $public = $this->char_esi->getCharacterPublic($sso);
-        return getCorporationPublic($public->corporation_id);
+        return $this->getCorporationPublic($public->corporation_id);
     }
 
     public function getCorporationPublic(int $corp_id) {
