@@ -65,6 +65,7 @@ class Esi {
         }
 
         $max_pages = $res->getHeader('X-Pages') ?: 1;
+        
         $body = json_decode($res->getBody(), true);
 
         // recursive calls
