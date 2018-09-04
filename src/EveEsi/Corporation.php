@@ -75,16 +75,16 @@ class Corporation extends BaseEsi {
         $uri = sprintf('corporations/%s/blueprints/', $sso->characterPublic->corporation_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsi($uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, []);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_blueprints-' . $sso->characterPublic->corporation_id]);
 
-        // if (!$expires->expired()) {
-        //     return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
-        // }
+        if (!$expires->expired()) {
+            return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        }
         
-        $return = $this->esi->callEsiAuth($sso, $uri, []);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
 
         if (!$return) {
             return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
