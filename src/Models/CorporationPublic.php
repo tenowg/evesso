@@ -14,7 +14,7 @@ class CorporationPublic extends EsiModel
         'corporation_id',
         'alliance_id',
         'ceo_id',
-        'creater_id',
+        'creator_id',
         'date_founded',
         'description',
         'faction_id',
