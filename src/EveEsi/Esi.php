@@ -31,7 +31,7 @@ class Esi {
     /**
      * @return boolean || object (boolean false will indicate Etag)
      */
-    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null, string $method = 'GET', $body = null) {
+    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null, string $method = 'GET', $body = null, $recursive = false) {
         $this->checkExpired($user);
 
         $client = new Client();
@@ -64,19 +64,18 @@ class Esi {
             $etag->save();
         }
 
-        $max_pages = $res->getHeader('X-Pages') ?: 1;
-        
-        $body = json_decode($res->getBody(), true);
+        $max_pages = +$res->getHeader('X-Pages')[0] ?: 1;
+        $body_res = json_decode($res->getBody(), true);
 
         // recursive calls
-        for ($page = 1; $page < $max_pages; $page++) {
-            $new_params = array_merge($param, ['page', $page + 1]);
-            $res_page = $this->callEsiAuth($user, $uri, $new_params);
-            $res_body = json_decode($res_page->getBody(), true);
-            $body = array_merge($body, $res_body);
+        if (!$recursive) {
+            for ($page = 2; $page <= $max_pages; $page++) {
+                $params['page'] = $page;
+                $res_page = $this->callEsiAuth($user, $uri, $params, $etag, $method, $body, true);
+                $body_res = array_merge($body_res, $res_page);
+            }
         }
-
-        return $body;
+        return $body_res;
     }
 
     public function callEsi($uri, array $params) {

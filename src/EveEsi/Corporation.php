@@ -85,7 +85,6 @@ class Corporation extends BaseEsi {
         }
         
         $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
-
         if (!$return) {
             return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
         }
@@ -93,7 +92,11 @@ class Corporation extends BaseEsi {
         $blueprints = array();
         foreach($return as $blueprint) {
             $blueprint['corporation_id'] = $sso->characterPublic->corporation_id;
-            array_push($blueprints, CorporationBlueprints::updateOrCreate(['item_id' => $blueprint['item_id']], $blueprint));
+            $db_print = CorporationBlueprints::updateOrCreate(['item_id' => $blueprint['item_id']], $blueprint);
+            if (!$db_print->wasRecentlyCreated) {
+                $db_print->touch();
+            }
+            array_push($blueprints, $db_print);
         }
 
         return $blueprints;
