@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace EveSSO;
 
 use EveSSO\EsiModel;
 
