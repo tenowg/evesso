@@ -10,7 +10,7 @@ use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 
 use Carbon\Carbon;
-use EveSSO\Structures;
+use EveSSO\Structure;
 
 class Universe extends BaseEsi {
     /**

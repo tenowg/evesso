@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace EveSSO;
 
-use Illuminate\Database\Eloquent\Model;
+use EveSSO\EsiModel;
 
 class Structure extends Model
 {
