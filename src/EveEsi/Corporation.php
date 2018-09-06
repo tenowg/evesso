@@ -19,6 +19,7 @@ use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 use EveSSO\CorporationPublic;
 use EveSSO\CorporationBlueprints;
+use EveSSO\CorporationAsset;
 
 class Corporation extends BaseEsi {
     /**
@@ -100,5 +101,36 @@ class Corporation extends BaseEsi {
         }
 
         return $blueprints;
+    }
+
+    public function getCorporationAssets(EveSSO $sso) {
+        $uri = sprintf('corporations/%s/assets/', $sso->characterPublic->corporation_id);
+
+        if (!$this->commit_data) {
+            return $this->esi->callEsiAuth($sso, $uri, []);
+        }
+
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_assets-' . $sso->characterPublic->corporation_id]);
+
+        if (!$expires->expired()) {
+            return CorporationAsset::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        }
+        
+        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        if (!$return) {
+            return CorporationAsset::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        }
+
+        $assets = array();
+        foreach($return as $asset) {
+            $asset['corporation_id'] = $sso->characterPublic->corporation_id;
+            $db_asset = CorporationAsset::updateOrCreate(['item_id' => $asset['item_id']], $asset);
+            if (!$db_asset->wasRecentlyCreated) {
+                $db_asset->touch();
+            }
+            array_push($assets, $db_asset);
+        }
+
+        return $assets;
     }
 }

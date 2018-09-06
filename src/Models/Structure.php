@@ -4,7 +4,7 @@ namespace EveSSO;
 
 use EveSSO\EsiModel;
 
-class Structure extends Model
+class Structure extends EsiModel
 {
     protected $fillable = [
         'structure_id',

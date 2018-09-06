@@ -44,23 +44,23 @@ class Universe extends BaseEsi {
         return InvTypes::updateOrCreate(['type_id' => $type_id], $eve_type);
     }
 
-    public function getStructure($structure_id) {
+    public function getStructure(EveSSO $sso, $structure_id) {
         $uri = sprintf('universe/structures/%s/', $structure_id);
 
         if (!$this->commit_data) {
             
-            return $this->esi->callEsi($uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, []);
         }
 
         //First lets see if we have it already
-        $type = Structure::whereStructureId($structure_id)->first();
+        $structure = Structure::whereStructureId($structure_id)->first();
 
         if ($structure != null) {
             return $structure;
         }
         
         // Lets get the item from Eve-online
-        $eve_structure = $this->esi->callEsi($uri, []);
+        $eve_structure = $this->esi->callEsiAuth($sso, $uri, []);
 
         $eve_structure['structure_id'] = $structure_id;
 
