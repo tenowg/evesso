@@ -13,7 +13,7 @@ use EveSSO\CharacterAssets;
 use EveEsi\Assets;
 use EveEsi\Universe;
 
-class InvTypesJob implements ShouldQueue
+class StructureJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
