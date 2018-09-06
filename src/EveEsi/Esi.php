@@ -58,6 +58,9 @@ class Esi {
             $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));
             $etag->save();
             return false;
+        } else if ($status == 403 || $status == 401 || $status == 404 || $status == 420 || $status == 500) {
+            // Forbidden
+            return false;
         } else if ($etag != null) {
             $etag->etag = $res->getHeader('ETag')[0]; // get headers...
             $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));

@@ -10,7 +10,7 @@ use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 
 use Carbon\Carbon;
-use App\InvTypes;
+use EveSSO\Structures;
 
 class Universe extends BaseEsi {
     /**
@@ -42,5 +42,28 @@ class Universe extends BaseEsi {
         $eve_type = $this->esi->callEsi($uri, []);
 
         return InvTypes::updateOrCreate(['type_id' => $type_id], $eve_type);
+    }
+
+    public function getStructure($structure_id) {
+        $uri = sprintf('universe/structures/%s/', $structure_id);
+
+        if (!$this->commit_data) {
+            
+            return $this->esi->callEsi($uri, []);
+        }
+
+        //First lets see if we have it already
+        $type = Structure::whereStructureId($structure_id)->first();
+
+        if ($structure != null) {
+            return $structure;
+        }
+        
+        // Lets get the item from Eve-online
+        $eve_structure = $this->esi->callEsi($uri, []);
+
+        $eve_structure['structure_id'] = $structure_id;
+
+        return Structure::updateOrCreate(['structure_id' => $structure_id], $eve_structure);
     }
 }
