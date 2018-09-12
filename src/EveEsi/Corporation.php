@@ -20,6 +20,7 @@ use EveSSO\Exceptions\InvalidScopeException;
 use EveSSO\CorporationPublic;
 use EveSSO\CorporationBlueprints;
 use EveSSO\CorporationAsset;
+use EveSSO\CorporationTitles;
 
 class Corporation extends BaseEsi {
     /**
