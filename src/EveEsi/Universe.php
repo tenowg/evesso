@@ -11,7 +11,7 @@ use EveSSO\Exceptions\InvalidScopeException;
 
 use Carbon\Carbon;
 use EveSSO\Structure;
-use EveData\InvTypes;
+use EveSSO\InvTypes;
 
 class Universe extends BaseEsi {
     /**
