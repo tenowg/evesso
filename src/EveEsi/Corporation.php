@@ -133,4 +133,35 @@ class Corporation extends BaseEsi {
 
         return $assets;
     }
+
+    public function getCorporationTitles(EveSSO $sso) {
+        $uri = sprintf('corporations/%s/titles/', $sso->characterPublic->corporation_id);
+
+        if (!$this->commit_data) {
+            return $this->esi->callEsiAuth($sso, $uri, []);
+        }
+
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_titles-' . $sso->characterPublic->corporation_id]);
+
+        if (!$expires->expired()) {
+            return CorporationTitles::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        }
+        
+        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        if (!$return) {
+            return CorporationTitles::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        }
+
+        $assets = array();
+        foreach($return as $asset) {
+            $asset['corporation_id'] = $sso->characterPublic->corporation_id;
+            $db_asset = CorporationTitles::updateOrCreate(['title_id' => $asset['title_id'], 'corporation_id' => $asset['corporation_id']], $asset);
+            if (!$db_asset->wasRecentlyCreated) {
+                $db_asset->touch();
+            }
+            array_push($assets, $db_asset);
+        }
+
+        return $assets;
+    }
 }

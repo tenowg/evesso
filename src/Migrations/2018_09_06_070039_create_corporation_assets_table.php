@@ -15,7 +15,7 @@ class CreateCorporationAssetsTable extends Migration
     {
         $connection = config('eve-sso.database');
         if (!Schema::connection($connection)->hasTable('corporation_assets')) {
-            Schema::create('corporation_assets', function (Blueprint $table) {
+            Schema::connection($connection)->create('corporation_assets', function (Blueprint $table) {
                 $table->integer('corporation_id');
                 $table->bigInteger('item_id');
                 $table->boolean('is_blueprint_copy')->nullable();

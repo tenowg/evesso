@@ -17,4 +17,8 @@ class Structure extends EsiModel
 
     protected $primaryKey = 'structure_id';
     public $incrementing = false;
+
+    protected $casts = [
+        'position' => 'array'
+    ];
 }
