@@ -67,7 +67,7 @@ class Esi {
             $etag->save();
         }
 
-        $x_pages = $res->getHeader('X_Pages');
+        $x_pages = $res->getHeader('X-Pages');
         $max_pages = 0;
         if ($x_pages) {
             $max_pages = +$x_pages[0] ?: 1;
