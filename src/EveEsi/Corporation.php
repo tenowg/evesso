@@ -92,6 +92,7 @@ class Corporation extends BaseEsi {
         }
 
         $blueprints = array();
+        $update_date = Carbon::now();
         foreach($return as $blueprint) {
             $blueprint['corporation_id'] = $sso->characterPublic->corporation_id;
             $db_print = CorporationBlueprints::updateOrCreate(['item_id' => $blueprint['item_id']], $blueprint);
@@ -100,6 +101,8 @@ class Corporation extends BaseEsi {
             }
             array_push($blueprints, $db_print);
         }
+
+        var_dump(CorporationBlueprints::whereDate('updated_at', '<', $update_date));
 
         return $blueprints;
     }
