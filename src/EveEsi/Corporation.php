@@ -102,7 +102,7 @@ class Corporation extends BaseEsi {
             array_push($blueprints, $db_print);
         }
 
-        var_dump(CorporationBlueprints::whereDate('updated_at', '<', $update_date));
+        CorporationBlueprints::whereDate('updated_at', '<', $update_date);
 
         return $blueprints;
     }
@@ -126,6 +126,7 @@ class Corporation extends BaseEsi {
         }
 
         $assets = array();
+        $update_date = Carbon::now();
         foreach($return as $asset) {
             $asset['corporation_id'] = $sso->characterPublic->corporation_id;
             $db_asset = CorporationAsset::updateOrCreate(['item_id' => $asset['item_id']], $asset);
@@ -134,6 +135,8 @@ class Corporation extends BaseEsi {
             }
             array_push($assets, $db_asset);
         }
+
+        CorporationAsset::whereDate('updated_at', '<', $update_date);
 
         return $assets;
     }
@@ -157,6 +160,7 @@ class Corporation extends BaseEsi {
         }
 
         $assets = array();
+        $update_date = Carbon::now();
         foreach($return as $asset) {
             $asset['corporation_id'] = $sso->characterPublic->corporation_id;
             $db_asset = CorporationTitles::updateOrCreate(['title_id' => $asset['title_id'], 'corporation_id' => $asset['corporation_id']], $asset);
@@ -165,6 +169,8 @@ class Corporation extends BaseEsi {
             }
             array_push($assets, $db_asset);
         }
+
+        CorporationTitles::whereDate('updated_at', '<', $update_date);
 
         return $assets;
     }
