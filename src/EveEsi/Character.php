@@ -125,7 +125,7 @@ class Character extends BaseEsi {
             throw new InvalidScopeException();
         }
 
-        $uri = sprintf('characters/%s/notifications/', $sso->$character_id);
+        $uri = sprintf('characters/%s/notifications/', $sso->character_id);
 
         if (!$this->commit_data) {
             return $this->esi->callEsiAuth($sso, $uri, []);

@@ -23,7 +23,7 @@ class CreateCharacterNotificationsTable extends Migration
                 $table->bigInteger('notification_id');
                 $table->integer('sender_id');
                 $table->string('sender_type');
-                $table->string('text')->nullable();
+                $table->mediumText('text')->nullable();
                 $table->dateTimeTz('timestamp');
                 $table->string('type');
                 
