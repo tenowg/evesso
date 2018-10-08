@@ -3,9 +3,8 @@
 namespace EveSSO;
 
 use EveSSO\EsiModel;
-use Illuminate\Database\Eloquent\Model;
 
-class CorporationAsset extends Model
+class CorporationAsset extends EsiModel
 {
     protected $primaryKey = 'item_id';
     public $incrementing = false;

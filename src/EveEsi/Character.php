@@ -11,6 +11,7 @@ use Carbon\Carbon;
 
 use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
+use EveSSO\CharacterNotifications;
 
 class Character extends BaseEsi {
     /**
@@ -114,5 +115,39 @@ class Character extends BaseEsi {
         $uri = sprintf("characters/%s/cspa/", $sso->character_id);
 
         return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $receiver_ids);
+    }
+
+    /**
+     * requires: esi-characters.read_notifications.v1
+     */
+    public function getNotifications(EveSSO $sso) {
+        if (!$this->hasScope($sso, Scopes::READ_NOTIFICATIONS)) {
+            throw new InvalidScopeException();
+        }
+
+        $uri = sprintf('characters/%s/notifications/', $sso->$character_id);
+
+        if (!$this->commit_data) {
+            return $this->esi->callEsiAuth($sso, $uri, []);
+        }
+        
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_notifications-' . $sso->character_id]);
+
+        if (!$expires->expired()) {
+            return CharacterNotifications::whereCharacterId($sso->character_id)->get()->toArray();
+        }
+
+        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        if (!$return) {
+            return CharacterNotifications::whereCharacterId($sso->character_id)->get()->toArray();
+        }
+
+        $notifications = [];
+        foreach($return as $note) {
+            $note['character_id'] = $sso->character_id;
+            $note['timestamp'] = new Carbon($note['timestamp']);
+            array_push($notifications, CharacterNotifications::updateOrCreate(['notification_id' => $note['notification_id'], 'character_id' => $sso->character_id], $note));
+        }
+        return $notifications;
     }
 }

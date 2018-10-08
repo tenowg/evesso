@@ -11,5 +11,6 @@ namespace EveEsi {
         const MAIL_SEND = 'esi-mail.send_mail.v1';
         const MAIL_ORGANIZE = 'esi-mail.organize_mail.v1';
         const CONTACTS_CHARACTER_READ = 'esi-characters.read_contacts.v1';
+        const READ_NOTIFICATIONS = 'esi-characters.read_notifications.v1';
     }
 }

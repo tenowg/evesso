@@ -47,8 +47,6 @@ class CharacterAssetNames implements ShouldQueue
         foreach($names as $name) {
             if ($name['name'] !== 'None') {
                 CharacterAssets::whereItemId($name['item_id'])->update(['item_name' => $name['name']]);
-                //$this->asset->item_name = $name['name'];
-                //$this->asset->save();
             }
         }
     }
