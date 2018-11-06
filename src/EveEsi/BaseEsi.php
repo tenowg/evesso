@@ -14,7 +14,7 @@ class BaseEsi {
         $this->commit_data = config('eve-sso.commit_data');
     }
     
-    public function hasScope(EveSSO $sso, string $scope) {
-        return in_array($scope, $sso->scopes);
-    }
+    // public function hasScope(EveSSO $sso, string $scope) {
+    //     return in_array($scope, $sso->scopes);
+    // }
 }

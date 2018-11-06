@@ -33,26 +33,23 @@ class Character extends BaseEsi {
      * requires scope: esi-characters.read_titles.v1
      */
     public function getTitles(EveSSO $sso) {
-        if ($this->hasScope($sso, Scopes::READ_CHARACTER_TITLES)) {
-            $public = $this->getCharacterPublic($sso);
-            $uri = sprintf('characters/%s/titles/', $sso->character_id);
-            if ($this->commit_data) {
-                $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_titles-' . $sso->character_id]);
-                if ($expires->expired()) {
-                    $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
-                    if (!$return) {
-                        return $public->titles;
-                    } else {
-                        $public->titles = $return;
-                        $public->save();
-                        return $public->titles;
-                    }
+        //if ($this->hasScope($sso, Scopes::READ_CHARACTER_TITLES)) {
+        $public = $this->getCharacterPublic($sso);
+        $uri = sprintf('characters/%s/titles/', $sso->character_id);
+        if ($this->commit_data) {
+            $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_titles-' . $sso->character_id]);
+            if ($expires->expired()) {
+                $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_TITLES, $expires);
+                if (!$return) {
+                    return $public->titles;
+                } else {
+                    $public->titles = $return;
+                    $public->save();
+                    return $public->titles;
                 }
             }
-            return $this->esi->callEsiAuth($sso, $uri, []);
         }
-
-        return [];
+        return $this->esi->callEsiAuth($sso, $uri, []);
     }
 
     /**
@@ -103,9 +100,9 @@ class Character extends BaseEsi {
     }
 
     public function getCspa(EveSSO $sso, EveSSO ...$receivers) {
-        if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
-            throw new InvalidScopeException();
-        }
+        // if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
+        //     throw new InvalidScopeException();
+        // }
 
         $receiver_ids = [];
         foreach($receivers as $receiver) {
@@ -114,21 +111,21 @@ class Character extends BaseEsi {
 
         $uri = sprintf("characters/%s/cspa/", $sso->character_id);
 
-        return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $receiver_ids);
+        return $this->esi->callEsiAuth($sso, $uri, [], Scopes::CONTACTS_CHARACTER_READ, null, 'POST', $receiver_ids);
     }
 
     /**
      * requires: esi-characters.read_notifications.v1
      */
     public function getNotifications(EveSSO $sso) {
-        if (!$this->hasScope($sso, Scopes::READ_NOTIFICATIONS)) {
-            throw new InvalidScopeException();
-        }
+        // if (!$this->hasScope($sso, Scopes::READ_NOTIFICATIONS)) {
+        //     throw new InvalidScopeException();
+        // }
 
         $uri = sprintf('characters/%s/notifications/', $sso->character_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_NOTIFICATIONS);
         }
         
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_notifications-' . $sso->character_id]);
@@ -137,7 +134,7 @@ class Character extends BaseEsi {
             return CharacterNotifications::whereCharacterId($sso->character_id)->get()->toArray();
         }
 
-        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS, $expires);
         if (!$return) {
             return CharacterNotifications::whereCharacterId($sso->character_id)->get()->toArray();
         }

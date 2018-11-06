@@ -9,6 +9,7 @@ use App\Applicant;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use EveSSO\EveSSO;
+use EveEsi\Scopes;
 use EveSSO\EsiExpireTimes;
 
 class Esi {
@@ -28,10 +29,18 @@ class Esi {
         }
     }
 
+    public function hasScope(EveSSO $sso, string $scope) {
+        return in_array($scope, $sso->scopes);
+    }
+
     /**
      * @return boolean || object (boolean false will indicate Etag)
      */
-    public function callEsiAuth(EveSSO $user, $uri, array $params, EsiExpireTimes $etag = null, string $method = 'GET', $body = null, $recursive = false) {
+    public function callEsiAuth(EveSSO $user, $uri, array $params, string $scope = null, EsiExpireTimes $etag = null, string $method = 'GET', $body = null, $recursive = false) {
+        if ($scope != null && !$this->hasScope($user, $scope)) {
+            throw new InvalidScopeException();
+        }
+
         $this->checkExpired($user);
 
         $client = new Client();
@@ -42,6 +51,10 @@ class Esi {
         );
 
         if ($etag != null) {
+            if (!$etag->expires()) {
+                return false;
+            }
+
             $headers['If-None-Match'] = $etag->etag;
         }
 
@@ -78,7 +91,7 @@ class Esi {
         if (!$recursive) {
             for ($page = 2; $page <= $max_pages; $page++) {
                 $params['page'] = $page;
-                $res_page = $this->callEsiAuth($user, $uri, $params, $etag, $method, $body, true);
+                $res_page = $this->callEsiAuth($user, $uri, $params, $scope, $etag, $method, $body, true);
                 $body_res = array_merge($body_res, $res_page);
             }
         }
@@ -97,26 +110,5 @@ class Esi {
         $res = $client->request('GET', $this->base_url . $uri, $options);
         
         return json_decode($res->getBody(), true);
-    }
-
-    public function getCharacterBalance($character_id, $access_token) {
-        $uri = sprintf('characters/%s/wallet/', $character_id);
-
-        return $this->callEsiAuth($access_token, $uri, []);
-    }
-
-    public function getCharacterJournal($character_id, $access_token, $page = 1) {
-        $uri = sprintf('characters/%s/wallet/journal/', $character_id);
-        $params = [
-            'page' => $page
-        ];
-
-        return $this->callEsiAuth($access_token, $uri, $params);
-    }
-
-    public function getCharacterSkills($character_id, $access_token) {
-        $uri = sprintf('characters/%s/skills/', $character_id);
-
-        return $this->callEsiAuth($access_token, $uri, []);
     }
 }

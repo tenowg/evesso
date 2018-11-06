@@ -50,13 +50,6 @@ class Corporation extends BaseEsi {
         if (!$this->commit_data) {
             return $this->esi->callEsi($uri, []);
         }
-
-        //$corp = CorporationPublic::find($corp_id);
-        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_public-' . $corp_id]);
-
-        if (!$expires->expired()) {
-            return CorporationPublic::whereCorporationId($corp_id)->get();
-        }
         
         $return = $this->esi->callEsi($uri, []);
 
@@ -77,16 +70,12 @@ class Corporation extends BaseEsi {
         $uri = sprintf('corporations/%s/blueprints/', $sso->characterPublic->corporation_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_BLUEPRINTS);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_blueprints-' . $sso->characterPublic->corporation_id]);
-
-        if (!$expires->expired()) {
-            return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
-        }
         
-        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_BLUEPRINTS, $expires);
         if (!$return) {
             return CorporationBlueprints::whereCorporationId($sso->characterPublic->corporation_id)->get();
         }
@@ -111,16 +100,12 @@ class Corporation extends BaseEsi {
         $uri = sprintf('corporations/%s/assets/', $sso->characterPublic->corporation_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_ASSETS);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_assets-' . $sso->characterPublic->corporation_id]);
-
-        if (!$expires->expired()) {
-            return CorporationAsset::whereCorporationId($sso->characterPublic->corporation_id)->get();
-        }
         
-        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_ASSETS, $expires);
         if (!$return) {
             return CorporationAsset::whereCorporationId($sso->characterPublic->corporation_id)->get();
         }
@@ -145,16 +130,16 @@ class Corporation extends BaseEsi {
         $uri = sprintf('corporations/%s/titles/', $sso->characterPublic->corporation_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_TITLES);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_titles-' . $sso->characterPublic->corporation_id]);
 
-        if (!$expires->expired()) {
-            return CorporationTitles::whereCorporationId($sso->characterPublic->corporation_id)->get();
-        }
+        // if (!$expires->expired()) {
+        //     return CorporationTitles::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        // }
         
-        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_TITLES, $expires);
         if (!$return) {
             return CorporationTitles::whereCorporationId($sso->characterPublic->corporation_id)->get();
         }

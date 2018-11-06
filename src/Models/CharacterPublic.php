@@ -39,6 +39,7 @@ use Carbon\Carbon;
  * @mixin \Eloquent
  * @property string $titles
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterPublic whereTitles($value)
+ * @property-read \EveSSO\CorporationPublic $corp
  */
 class CharacterPublic extends EsiModel
 {
@@ -72,5 +73,9 @@ class CharacterPublic extends EsiModel
     public function expired() {
         $expires_at = $this->updated_at->copy()->addSeconds(3600);
         return $expires_at->lt(new Carbon());
+    }
+
+    public function corp() {
+        return $this->hasOne('EveSSO\CorporationPublic', 'corporation_id', 'corporation_id');
     }
 }

@@ -31,14 +31,14 @@ class Contacts extends BaseEsi {
     }
 
     public function getCharacterContacts(EveSSO $sso) {
-        if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
-            throw new InvalidScopeException();
-        }
+        // if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
+        //     throw new InvalidScopeException();
+        // }
 
         $uri = sprintf('characters/%s/contacts/', $sso->character_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::CONTACTS_CHARACTER_READ);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_contacts-' . $sso->character_id]);

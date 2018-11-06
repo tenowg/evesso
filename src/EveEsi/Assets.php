@@ -23,14 +23,10 @@ class Assets extends BaseEsi {
     }
 
     public function getAssetNames(EveSSO $sso, array $ids) {
-        if (!$this->hasScope($sso, Scopes::READ_CHARACTER_ASSETS)) {
-            throw new InvalidScopeException();
-        }
-
         $uri = sprintf('characters/%s/assets/names/', $sso->character_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $ids);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS, null, 'POST', $ids);
         }
 
         $return = $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $ids);
@@ -39,14 +35,10 @@ class Assets extends BaseEsi {
     }
 
     public function getCharacterAssets(EveSSO $sso) {
-        if (!$this->hasScope($sso, Scopes::READ_CHARACTER_ASSETS)) {
-            throw new InvalidScopeException();
-        }
-
         $uri = sprintf('characters/%s/assets/', $sso->character_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, []);
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'character_assets-' . $sso->character_id]);
@@ -54,7 +46,7 @@ class Assets extends BaseEsi {
             return CharacterAssets::whereCharacterId($sso->character_id)->get();
         }
 
-        $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS, $expires);
         if (!$return) {
             return CharacterAssets::whereCharacterId($sso->character_id)->get();
         }
@@ -70,7 +62,5 @@ class Assets extends BaseEsi {
             $date = $assets[0]->updated_at;
             CharacterAssets::whereUpdatedAt("<", $date)->whereCharacterId($sso->character_id)->delete();
         }
-
-        return $assets;
     }
 }

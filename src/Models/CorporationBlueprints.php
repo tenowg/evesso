@@ -4,6 +4,37 @@ namespace EveSSO;
 
 use EveSSO\EsiModel;
 
+/**
+ * EveSSO\CorporationBlueprints
+ *
+ * @property int $corporation_id
+ * @property int $item_id
+ * @property string $location_flag
+ * @property int $location_id
+ * @property int $material_efficiency
+ * @property int $quantity
+ * @property int $runs
+ * @property int $time_efficiency
+ * @property int $type_id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read bool $is_copy
+ * @property-read bool $is_original
+ * @property-read bool $is_stack
+ * @property-read \EveSSO\InvTypes $type
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereCorporationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereLocationFlag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereMaterialEfficiency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereRuns($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereTimeEfficiency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationBlueprints whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class CorporationBlueprints extends EsiModel
 {
     protected $table = "corporation_blueprints";

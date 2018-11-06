@@ -28,6 +28,7 @@ use EveSSO\EsiModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterContacts whereLabelIds($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterContacts whereStanding($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterContacts whereUpdatedAt($value)
+ * @property-read \EveSSO\CharacterPublic $character
  */
 class CharacterContacts extends EsiModel
 {
@@ -47,4 +48,8 @@ class CharacterContacts extends EsiModel
     protected $casts = [
         'label_ids' => 'array'
     ];
+
+    public function character() {
+        return $this->hasOne('EveSSO\CharacterPublic', 'character_id', 'character_id');
+    }
 }
