@@ -52,6 +52,10 @@ class CreateCharacterIndustryJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('character_industry_jobs');
+        $connection = config('eve-sso.database');
+        $main = config('eve-sso.main_host');
+        if ($main && Schema::connection($connection)->hasTable('character_industry_jobs')) {
+            Schema::connection($connection)->dropIfExists('character_industry_jobs');
+        }
     }
 }

@@ -8,6 +8,7 @@ use EveSSO\EsiExpireTimes;
 use EveSSO\EveSSO;
 
 use EveEsi\Scopes;
+use App\CharacterBalance;
 
 class Wallet extends BaseEsi {
 
@@ -21,10 +22,19 @@ class Wallet extends BaseEsi {
         parent::__construct();
     }
 
-    public function getCharacterBalance($character_id, $access_token) {
+    public function getCharacterBalance(EveSSO $sso) {
         $uri = sprintf('characters/%s/wallet/', $character_id);
 
-        return $this->esi->callEsiAuth($access_token, $uri, [], Scopes::READ_CHARACTER_WALLET);
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_balance-' . $sso->character_id]);
+        $return = $this->esi->callEsiAuth($access_token, $uri, [], Scopes::READ_CHARACTER_WALLET, $expires);
+
+        if (!$this->commit_data) {
+            return $return;
+        }
+
+        $balance = CharacterBalance::updateOrCreate(['character_id' => $sso->character_id], ['balance' => $return]);
+
+        return $balance;
     }
 
     public function getCharacterJournal($character_id, $access_token, $page = 1) {
