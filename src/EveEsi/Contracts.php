@@ -36,10 +36,6 @@ class Contracts extends BaseEsi {
     }
 
     public function getPersonalContracts(EveSSO $sso) {
-        // if (!$this->hasScope($sso, Scopes::READ_PERSONAL_CONTRACTS)) {
-        //     throw new InvalidScopeException();
-        // }
-
         $uri = sprintf('characters/%s/contracts/', $sso->character_id);
 
         if (!$this->commit_data) {
@@ -47,10 +43,6 @@ class Contracts extends BaseEsi {
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_personal_contracts-' . $sso->character_id]);
-
-        // if (!$expires->expired()) {
-        //     return PersonalContract::whereCharacterId($sso->character_id)->get()->toArray();
-        // }
 
         $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_PERSONAL_CONTRACTS, $expires);
         if (!$return) {
@@ -78,10 +70,6 @@ class Contracts extends BaseEsi {
      * @return array
      */
     public function getPersonalContractItems(EvSSO $sso, number $contract_id) {
-        // if (!$this->hasScope($sso, Scopes::READ_PERSONAL_CONTRACTS)) {
-        //     throw new InvalidScopeException();
-        // }
-        
         $uri = sprintf('characters/%s/contracts/%s/items/', $sso->character_id, $contract_id);
         return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_PERSONAL_CONTRACTS);
     }
@@ -91,10 +79,6 @@ class Contracts extends BaseEsi {
      * @return array
      */
     public function getCorporationContracts(EveSSO $sso) {
-        // if (!$this->hasScope($sso, Scopes::READ_CORP_CONTRACTS)) {
-        //     throw new InvalidScopeException();
-        // }
-
         $public = $this->char_esi->getCharacterPublic($sso);
         if ($public instanceof CharacterPublic) {
             $uri = sprintf('corporations/%s/contracts/', $public->corporation_id);
@@ -104,7 +88,7 @@ class Contracts extends BaseEsi {
             }
             
             $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_contracts-' . $public->corporation_id]);
-            //if ($expires->expired()) {
+
             $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_CONTRACTS, $expires);
             if (!$return) {
                 return CorporationContract::whereCorporationId($public->corporation_id)->get()->toArray();
@@ -123,9 +107,6 @@ class Contracts extends BaseEsi {
                 array_push($contracts, CorporationContract::updateOrCreate(['contract_id' => $contract['contract_id']], $contract));
             }
             return $contracts;
-        //} else {
-        //    return CorporationContract::whereCorporationId($public->corporation_id)->get()->toArray();
-        //}
         }
 
         throw new Exception('Invalid/No Character Found');
@@ -135,11 +116,7 @@ class Contracts extends BaseEsi {
      * requires scope: esi-contracts.read_corporation_contracts.v1
      * @return array
      */
-    public function getCorporationContractItems(EvSSO $sso, number $contract_id) {
-        // if ($this->hasScope($sso, 'esi-contracts.read_corporation_contracts.v1')) {
-        //     throw new InvalidScopeException();
-        // }
-            
+    public function getCorporationContractItems(EvSSO $sso, number $contract_id) {            
         $items = $this->char_esi->getCharacterPublic($sso);
         if ($public instanceof CharacterPublic) {
             $uri = sprintf('corporations/%s/contracts/%s/items/', $public->corporation_id, $contract_id);

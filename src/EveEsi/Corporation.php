@@ -46,12 +46,11 @@ class Corporation extends BaseEsi {
 
     public function getCorporationPublic(int $corp_id) {
         $uri = sprintf('corporations/%s/', $corp_id);
+        $return = $this->esi->callEsi($uri, []);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsi($uri, []);
+            return $return;
         }
-        
-        $return = $this->esi->callEsi($uri, []);
 
         if (!$return) {
             return CorporationPublic::whereCorporationId($corp_id)->get();

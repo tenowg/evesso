@@ -32,6 +32,9 @@ use EveSSO\EsiModel;
  */
 class AlliancePublic extends EsiModel
 {
+    public $incrementing = false;
+    protected $primaryKey = 'alliance_id';
+
     protected $fillable = [
         'alliance_id',
         'creator_id',

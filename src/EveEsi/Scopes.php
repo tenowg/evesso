@@ -6,7 +6,9 @@ namespace EveEsi {
         const READ_PERSONAL_CONTRACTS = 'esi-contracts.read_character_contracts.v1';
         const READ_CHARACTER_TITLES = 'esi-characters.read_titles.v1';
         const READ_CHARACTER_ASSETS = 'esi-assets.read_assets.v1';
-        const READ_CHARACTER_SKILLS = 'scope: esi-skills.read_skills.v1';
+        const READ_CHARACTER_INDUSTRY_JOBS = 'esi-industry.read_character_jobs.v1';
+        const READ_CHARACTER_MINING = 'esi-industry.read_character_mining.v1';
+        const READ_CHARACTER_SKILLS = 'esi-skills.read_skills.v1';
         const READ_CHARACTER_WALLET = 'esi-wallet.read_character_wallet.v1';
         const READ_CORP_ASSETS = 'esi-assets.read_corporation_assets.v1';
         const READ_CORP_BLUEPRINTS = 'esi-corporations.read_blueprints.v1';
