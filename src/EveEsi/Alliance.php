@@ -2,6 +2,8 @@
 
 namespace EveEsi;
 
+use Carbon\Carbon;
+
 use EveEsi\BaseEsi;
 use EveEsi\Esi;
 use EveEsi\Character;
