@@ -8,7 +8,7 @@ use EveSSO\EsiExpireTimes;
 use EveSSO\EveSSO;
 
 use EveEsi\Scopes;
-use App\CharacterBalance;
+use EveSSO\CharacterBalance;
 
 class Wallet extends BaseEsi {
 

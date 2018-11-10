@@ -12,7 +12,7 @@ use EveSSO\EveSSO;
 
 use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
-use App\CharacterIndustryJobs;
+use EveSSO\CharacterIndustryJobs;
 
 class Industry extends BaseEsi {
     /**

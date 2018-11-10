@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 use EveSSO\CharacterNotifications;
-use App\CharacterRoles;
+use EveSSO\CharacterRoles;
 
 class Character extends BaseEsi {
     /**

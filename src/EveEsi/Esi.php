@@ -3,9 +3,9 @@
 namespace EveEsi;
 
 use Socialite;
-use App\User;
-use App\Tokens;
-use App\Applicant;
+// use App\User;
+// use App\Tokens;
+// use App\Applicant;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use EveSSO\EveSSO;
