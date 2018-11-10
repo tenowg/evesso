@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 use EveSSO\CharacterNotifications;
+use App\CharacterRoles;
 
 class Character extends BaseEsi {
     /**
@@ -100,10 +101,6 @@ class Character extends BaseEsi {
     }
 
     public function getCspa(EveSSO $sso, EveSSO ...$receivers) {
-        // if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
-        //     throw new InvalidScopeException();
-        // }
-
         $receiver_ids = [];
         foreach($receivers as $receiver) {
             array_push($receiver_ids, $receiver->character_id);
@@ -118,10 +115,6 @@ class Character extends BaseEsi {
      * requires: esi-characters.read_notifications.v1
      */
     public function getNotifications(EveSSO $sso) {
-        // if (!$this->hasScope($sso, Scopes::READ_NOTIFICATIONS)) {
-        //     throw new InvalidScopeException();
-        // }
-
         $uri = sprintf('characters/%s/notifications/', $sso->character_id);
 
         if (!$this->commit_data) {
@@ -129,10 +122,6 @@ class Character extends BaseEsi {
         }
         
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_notifications-' . $sso->character_id]);
-
-        if (!$expires->expired()) {
-            return CharacterNotifications::whereCharacterId($sso->character_id)->get()->toArray();
-        }
 
         $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS, $expires);
         if (!$return) {
@@ -146,5 +135,27 @@ class Character extends BaseEsi {
             array_push($notifications, CharacterNotifications::updateOrCreate(['notification_id' => $note['notification_id'], 'character_id' => $sso->character_id], $note));
         }
         return $notifications;
+    }
+
+     /**
+     * requires: esi-characters.read_notifications.v1
+     */
+    public function getRoles(EveSSO $sso) {
+        $uri = sprintf('characters/%s/roles/', $sso->character_id);
+
+        if (!$this->commit_data) {
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ROLES);
+        }
+        
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_roles-' . $sso->character_id]);
+
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ROLES, $expires);
+        if (!$return) {
+            return CharacterRoles::whereCharacterId($sso->character_id)->first();
+        }
+
+        $return['character_id'] = $sso->character_id;
+
+        return CharacterRoles::updateOrCreate(['character_id' => $sso->character_id], $return);
     }
 }

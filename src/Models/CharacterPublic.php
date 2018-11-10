@@ -40,6 +40,9 @@ use Carbon\Carbon;
  * @property string $titles
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CharacterPublic whereTitles($value)
  * @property-read \EveSSO\CorporationPublic $corp
+ * @property-read \EveSSO\CharacterRoles $roles
+ * @property-read \EveSSO\EveSSO $sso
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterStats[] $stats
  */
 class CharacterPublic extends EsiModel
 {
@@ -77,5 +80,17 @@ class CharacterPublic extends EsiModel
 
     public function corp() {
         return $this->hasOne('EveSSO\CorporationPublic', 'corporation_id', 'corporation_id');
+    }
+
+    public function sso() {
+        return $this->hasOne('EveSSO\EveSSO', 'character_id', 'character_id');
+    }
+
+    public function stats() {
+        return $this->hasMany('EveSSO\CharacterStats', 'character_id', 'character_id');
+    }
+
+    public function roles() {
+        return $this->hasOne('EveSSO\CharacterRoles', 'character_id', 'character_id');
     }
 }

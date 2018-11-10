@@ -10,6 +10,8 @@ namespace EveEsi {
         const READ_CHARACTER_MINING = 'esi-industry.read_character_mining.v1';
         const READ_CHARACTER_SKILLS = 'esi-skills.read_skills.v1';
         const READ_CHARACTER_WALLET = 'esi-wallet.read_character_wallet.v1';
+        const READ_CHARACTER_ROLES = 'esi-characters.read_corporation_roles.v1';
+        const READ_CHARACTER_STATS = 'esi-characterstats.read.v1';
         const READ_CORP_ASSETS = 'esi-assets.read_corporation_assets.v1';
         const READ_CORP_BLUEPRINTS = 'esi-corporations.read_blueprints.v1';
         const READ_CORP_TITLES = 'esi-corporations.read_titles.v1';

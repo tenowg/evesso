@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCharacterBalancesTable extends Migration
+class CreateCharacterRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,13 @@ class CreateCharacterBalancesTable extends Migration
     public function up()
     {
         $connection = config('eve-sso.database');
-        if (!Schema::connection($connection)->hasTable('character_balances')) {
-            Schema::connection($connection)->create('character_balances', function (Blueprint $table) {
+        if (!Schema::connection($connection)->hasTable('character_roles')) {
+            Schema::connection($connection)->create('character_roles', function (Blueprint $table) {
                 $table->integer('character_id');
-                $table->double('balance', null, 2);
+                $table->json('roles')->default('[]');
+                $table->json('roles_at_base')->default('[]');
+                $table->json('roles_at_hq')->default('[]');
+                $table->json('roles_at_other')->default('[]');
                 $table->timestamps();
 
                 $table->primary('character_id');
@@ -37,5 +40,6 @@ class CreateCharacterBalancesTable extends Migration
         if ($main && Schema::connection($connection)->hasTable('character_balances')) {
             Schema::connection($connection)->dropIfExists('character_balances');
         }
+        Schema::dropIfExists('character_roles');
     }
 }
