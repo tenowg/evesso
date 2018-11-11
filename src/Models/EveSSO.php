@@ -33,6 +33,7 @@ use Carbon\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterContacts[] $contacts
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\PersonalContract[] $contracts
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\MailHeader[] $mailheaders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterStats[] $stats
  */
 class EveSSO extends EsiModel
 {
@@ -87,5 +88,9 @@ class EveSSO extends EsiModel
 
     public function mailheaders() {
         return $this->hasMany('EveSSO\MailHeader', 'character_id', 'character_id');
+    }
+
+    public function stats() {
+        return $this->hasMany('EveSSO\CharacterStats', 'character_id', 'character_id');
     }
 }
