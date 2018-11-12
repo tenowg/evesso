@@ -50,6 +50,7 @@ class CharacterStats extends EsiModel
         'character_id',
         'character',
         'combat',
+        'inventory',
         'industry',
         'isk',
         'market',

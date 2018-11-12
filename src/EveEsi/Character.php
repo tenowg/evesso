@@ -177,7 +177,7 @@ class Character extends BaseEsi {
         $stats = [];
         foreach($return as $stat) {
             $stat['character_id'] = $sso->character_id;
-            array_push($stats, CharacterStats::updateOrCreate(['character_id' => $sso->character_id, 'year' => $stat['year']], $return));
+            array_push($stats, CharacterStats::updateOrCreate(['character_id' => $sso->character_id, 'year' => $stat['year']], $stat));
         }
         return $stats;
     }

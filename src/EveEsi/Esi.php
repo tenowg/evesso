@@ -51,7 +51,7 @@ class Esi {
         );
 
         if ($etag != null) {
-            if (!$etag->expires()) {
+            if (!$etag->expired()) {
                 return false;
             }
 
