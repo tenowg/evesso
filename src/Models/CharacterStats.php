@@ -66,6 +66,7 @@ class CharacterStats extends EsiModel
     protected $casts = [
         'character' => 'array',
         'combat' => 'array',
+        'inventory' => 'array',
         'industry' => 'array',
         'isk' => 'array',
         'market' => 'array',
