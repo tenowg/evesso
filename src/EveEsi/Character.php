@@ -13,6 +13,7 @@ use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 use EveSSO\CharacterNotifications;
 use EveSSO\CharacterRoles;
+use EveSSO\CharacterStats;
 
 class Character extends BaseEsi {
     /**
@@ -157,5 +158,27 @@ class Character extends BaseEsi {
         $return['character_id'] = $sso->character_id;
 
         return CharacterRoles::updateOrCreate(['character_id' => $sso->character_id], $return);
+    }
+
+    public function getStats(EveSSO $sso) {
+        $uri = sprintf('characters/%s/stats/', $sso->character_id);
+
+        if (!$this->commit_data) {
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_STATS);
+        }
+        
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_stats-' . $sso->character_id]);
+
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_STATS, $expires);
+        if (!$return) {
+            return CharacterStats::whereCharacterId($sso->character_id)->get();
+        }
+
+        $stats = [];
+        foreach($return as $stat) {
+            $stat['character_id'] = $sso->character_id;
+            array_push($stats, CharacterStats::updateOrCreate(['character_id' => $sso->character_id, 'year' => $stat['year']], $return));
+        }
+        return $stats;
     }
 }
