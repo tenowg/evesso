@@ -43,6 +43,8 @@ use Carbon\Carbon;
  * @property-read \EveSSO\CharacterRoles $roles
  * @property-read \EveSSO\EveSSO $sso
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterStats[] $stats
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterIndustryJobs[] $jobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterNotifications[] $notifications
  */
 class CharacterPublic extends EsiModel
 {
@@ -92,5 +94,13 @@ class CharacterPublic extends EsiModel
 
     public function roles() {
         return $this->hasOne('EveSSO\CharacterRoles', 'character_id', 'character_id');
+    }
+
+    public function jobs() {
+        return $this->hasMany('EveSSO\CharacterIndustryJobs', 'installer_id', 'character_id');
+    }
+
+    public function notifications() {
+        return $this->hasMany('EveSSO\CharacterNotifications', 'character_id', 'character_id');
     }
 }

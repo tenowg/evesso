@@ -56,6 +56,8 @@ use EveSSO\EsiModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CharacterIndustryJobs whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CharacterIndustryJobs whereSuccessfulRuns($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CharacterIndustryJobs whereUpdatedAt($value)
+ * @property-read \EveSSO\CharacterPublic $installer
+ * @property-read \EveSSO\EveSSO $installer_sso
  */
 class CharacterIndustryJobs extends EsiModel
 {
@@ -86,4 +88,12 @@ class CharacterIndustryJobs extends EsiModel
         'status',
         'successful_runs'
     ];
+
+    public function installer() {
+        return $this->hasOne('EveSSO\CharacterPublic', 'character_id', 'isntaller_id');
+    }
+
+    public function installer_sso() {
+        return $this->hasOne('EveSSO\EveSSO', 'character_id', 'installer_id');
+    }
 }
