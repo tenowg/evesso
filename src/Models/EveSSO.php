@@ -34,6 +34,9 @@ use Carbon\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\PersonalContract[] $contracts
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\MailHeader[] $mailheaders
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterStats[] $stats
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterIndustryJobs[] $industryJobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterNotifications[] $notifications
+ * @property-read \EveSSO\CharacterRoles $roles
  */
 class EveSSO extends EsiModel
 {
@@ -92,5 +95,17 @@ class EveSSO extends EsiModel
 
     public function stats() {
         return $this->hasMany('EveSSO\CharacterStats', 'character_id', 'character_id');
+    }
+
+    public function roles() {
+        return $this->hasOne('EveSSO\CharacterRoles', 'character_id', 'character_id');
+    }
+
+    public function notifications() {
+        return $this->hasMany('EveSSO\CharacterNotifications', 'character_id', 'character_id');
+    }
+
+    public function industryJobs() {
+        return $this->hasMany('EveSSO\CharacterIndustryJobs', 'isntaller_id', 'character_id');
     }
 }

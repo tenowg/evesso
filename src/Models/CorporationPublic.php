@@ -43,6 +43,8 @@ use EveSSO\EsiModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationPublic whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationPublic whereUrl($value)
  * @mixin \Eloquent
+ * @property-read \EveSSO\AlliancePublic $alliance
+ * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CorporationIndustryJobs[] $industryJobs
  */
 class CorporationPublic extends EsiModel
 {
@@ -77,5 +79,13 @@ class CorporationPublic extends EsiModel
 
     public function creator() {
         return $this->hasOne('EveSSO\CharacterPublic', 'character_id', 'creator_id');
+    }
+
+    public function industryJobs() {
+        return $this->hasMany('EveSSO\CorporationIndustryJobs', 'corporation_id', 'corporation_id');
+    }
+
+    public function alliance() {
+        return $this->hasOne('EveSSO\AlliancePublic', 'alliance_id', 'alliance_id');
     }
 }
