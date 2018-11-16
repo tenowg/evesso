@@ -67,7 +67,7 @@ class Industry extends BaseEsi {
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporations_industry_jobs-' . $corp->corporation_id]);
 
-        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_INDUSTRY_JOBS, $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, ['include_completed' => true], Scopes::READ_CORP_INDUSTRY_JOBS, $expires);
         if (!$return) {
             return CorporationIndustryJobs::whereCorporationId($corp->corporation_id)->get();
         }

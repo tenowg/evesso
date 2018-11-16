@@ -36,7 +36,7 @@ class CreateCorporationIndustryJobsTable extends Migration
                 $table->integer('product_type_id')->nullable();
                 $table->integer('runs');
                 $table->dateTimeTz('start_date');
-                $table->integer('location_id');
+                $table->bigInteger('location_id');
                 $table->string('status');
                 $table->integer('successful_runs')->nullable();
                 $table->timestamps();

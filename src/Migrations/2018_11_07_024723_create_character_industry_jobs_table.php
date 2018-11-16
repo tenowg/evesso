@@ -35,7 +35,7 @@ class CreateCharacterIndustryJobsTable extends Migration
                 $table->integer('product_type_id')->nullable();
                 $table->integer('runs');
                 $table->dateTimeTz('start_date');
-                $table->integer('station_id');
+                $table->bigInteger('station_id');
                 $table->string('status');
                 $table->integer('successful_runs')->nullable();
                 $table->timestamps();
