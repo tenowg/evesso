@@ -62,7 +62,7 @@ class Industry extends BaseEsi {
         $uri = sprintf('corporations/%s/industry/jobs/', $corp->corporation_id);
 
         if (!$this->commit_data) {
-            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_INDUSTRY_JOBS);
+            return $this->esi->callEsiAuth($sso, $uri, ['include_completed' => true], Scopes::READ_CORP_INDUSTRY_JOBS);
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporations_industry_jobs-' . $corp->corporation_id]);
