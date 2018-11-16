@@ -14,7 +14,7 @@ use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 use EveSSO\CharacterIndustryJobs;
 use EveSSO\CorporationPublic;
-use App\CorporationIndustryJobs;
+use EveSSO\CorporationIndustryJobs;
 
 class Industry extends BaseEsi {
     /**
@@ -31,7 +31,7 @@ class Industry extends BaseEsi {
     public function getCharacterIndustryJobs(EveSSO $sso) {
         $uri = sprintf('characters/%s/industry/jobs/', $sso->character_id);
 
-        if ($this->commit_data) {
+        if (!$this->commit_data) {
             return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_INDUSTRY_JOBS);
         }
 
@@ -61,7 +61,7 @@ class Industry extends BaseEsi {
     public function getCorporationIndustryJobs(EveSSO $sso, CorporationPublic $corp) {
         $uri = sprintf('corporations/%s/industry/jobs/', $corp->corporation_id);
 
-        if ($this->commit_data) {
+        if (!$this->commit_data) {
             return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_INDUSTRY_JOBS);
         }
 
@@ -83,7 +83,7 @@ class Industry extends BaseEsi {
                 $job['pause_date'] = new Carbon($job['pause_date']);
             }
             $job['start_date'] = new Carbon($job['start_date']);
-            array_push($jobs, CharacterIndustryJobs::updateOrCreate(['job_id' => $job['job_id']], $job));
+            array_push($jobs, CorporationIndustryJobs::updateOrCreate(['job_id' => $job['job_id']], $job));
         }
 
         return $jobs;

@@ -72,7 +72,7 @@ class CharacterIndustryJobs extends EsiModel
         'completed_character_id',
         'completed_date',
         'cost',
-        'duraction',
+        'duration',
         'end_date',
         'facility_id',
         'installer_id',

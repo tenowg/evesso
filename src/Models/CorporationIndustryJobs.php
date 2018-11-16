@@ -76,7 +76,7 @@ class CorporationIndustryJobs extends EsiModel
         'completed_character_id',
         'completed_date',
         'cost',
-        'duraction',
+        'duration',
         'end_date',
         'facility_id',
         'installer_id',
@@ -88,7 +88,7 @@ class CorporationIndustryJobs extends EsiModel
         'product_type_id',
         'runs',
         'start_date',
-        'station_id',
+        'location_id',
         'status',
         'successful_runs'
     ];

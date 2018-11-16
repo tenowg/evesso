@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use EveSSO\EveSSO;
 use EveEsi\Scopes;
 use EveSSO\EsiExpireTimes;
+use EveSSO\Exceptions\InvalidScopeException;
 
 class Esi {
     private $base_url;
