@@ -21,6 +21,7 @@ use EveSSO\CorporationPublic;
 use EveSSO\CorporationBlueprints;
 use EveSSO\CorporationAsset;
 use EveSSO\CorporationTitles;
+use App\CorporationStructures;
 
 class Corporation extends BaseEsi {
     /**
@@ -133,10 +134,6 @@ class Corporation extends BaseEsi {
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_titles-' . $sso->characterPublic->corporation_id]);
-
-        // if (!$expires->expired()) {
-        //     return CorporationTitles::whereCorporationId($sso->characterPublic->corporation_id)->get();
-        // }
         
         $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_TITLES, $expires);
         if (!$return) {
@@ -155,6 +152,51 @@ class Corporation extends BaseEsi {
         }
 
         CorporationTitles::whereDate('updated_at', '<', $update_date);
+
+        return $assets;
+    }
+
+    public function getCorporationStructures(EveSSO $sso) {
+        $uri = sprintf('corporations/%s/structures/', $sso->characterPublic->corporation_id);
+
+        if (!$this->commit_data) {
+            return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_STRUCTURES);
+        }
+
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_corporation_structures-' . $sso->characterPublic->corporation_id]);
+        
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_STRUCTURES, $expires);
+        if (!$return) {
+            return CorporationStructures::whereCorporationId($sso->characterPublic->corporation_id)->get();
+        }
+
+        $assets = array();
+        $update_date = Carbon::now();
+        foreach($return as $asset) {
+            if (array_key_exists($asset, 'fuel_expires')) {
+                $asset['fuel_expires'] = new Carbon($asset['fuel_expires']);
+            }
+            if (array_key_exists($asset, 'next_reinforce_apply')) {
+                $asset['next_reinforce_apply'] = new Carbon($asset['next_reinforce_apply']);
+            }
+            if (array_key_exists($asset, 'state_timer_end')) {
+                $asset['state_timer_end'] = new Carbon($asset['state_timer_end']);
+            }
+            if (array_key_exists($asset, 'state_timer_start')) {
+                $asset['state_timer_start'] = new Carbon($asset['state_timer_start']);
+            }
+            if (array_key_exists($asset, 'unanchors_at')) {
+                $asset['unanchors_at'] = new Carbon($asset['unanchors_at']);
+            }
+
+            $db_asset = CorporationStructures::updateOrCreate(['structure_id' => $asset['structure_id']], $asset);
+            if (!$db_asset->wasRecentlyCreated) {
+                $db_asset->touch();
+            }
+            array_push($assets, $db_asset);
+        }
+
+        CorporationStructures::whereDate('updated_at', '<', $update_date);
 
         return $assets;
     }

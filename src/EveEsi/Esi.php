@@ -92,7 +92,7 @@ class Esi {
         if (!$recursive) {
             for ($page = 2; $page <= $max_pages; $page++) {
                 $params['page'] = $page;
-                $res_page = $this->callEsiAuth($user, $uri, $params, $scope, $etag, $method, $body, true);
+                $res_page = $this->callEsiAuth($user, $uri, $params, $scope, null, $method, $body, true);
                 $body_res = array_merge($body_res, $res_page);
             }
         }

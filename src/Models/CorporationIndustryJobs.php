@@ -61,6 +61,8 @@ use EveSSO\EsiModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CorporationIndustryJobs whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CorporationIndustryJobs whereSuccessfulRuns($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CorporationIndustryJobs whereUpdatedAt($value)
+ * @property int $location_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\CorporationIndustryJobs whereLocationId($value)
  */
 class CorporationIndustryJobs extends EsiModel
 {

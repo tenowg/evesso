@@ -14,6 +14,7 @@ namespace EveEsi {
         const READ_CHARACTER_STATS = 'esi-characterstats.read.v1';
         const READ_CORP_ASSETS = 'esi-assets.read_corporation_assets.v1';
         const READ_CORP_BLUEPRINTS = 'esi-corporations.read_blueprints.v1';
+        const READ_CORP_STRUCTURES = 'esi-corporations.read_structures.v1';
         const READ_CORP_TITLES = 'esi-corporations.read_titles.v1';
         const READ_CORP_INDUSTRY_JOBS = 'esi-industry.read_corporation_jobs.v1';
         const MAIL_READ = 'esi-mail.read_mail.v1';
