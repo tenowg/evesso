@@ -31,10 +31,6 @@ class Contacts extends BaseEsi {
     }
 
     public function getCharacterContacts(EveSSO $sso) {
-        // if (!$this->hasScope($sso, Scopes::CONTACTS_CHARACTER_READ)) {
-        //     throw new InvalidScopeException();
-        // }
-
         $uri = sprintf('characters/%s/contacts/', $sso->character_id);
 
         if (!$this->commit_data) {
@@ -42,9 +38,6 @@ class Contacts extends BaseEsi {
         }
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_contacts-' . $sso->character_id]);
-        if (!$expires->expired()) {
-            return CharacterContacts::whereCharacterId($sso->character_id)->get()->toArray();
-        }
 
         $return = $this->esi->callEsiAuth($sso, $uri, [], $expires);
         if (!$return) {

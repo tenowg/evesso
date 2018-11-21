@@ -91,7 +91,7 @@ class Corporation extends BaseEsi {
             array_push($blueprints, $db_print);
         }
 
-        CorporationBlueprints::whereDate('updated_at', '<', $update_date);
+        CorporationBlueprints::whereDate('updated_at', '<', $update_date)->delete();
 
         return $blueprints;
     }
@@ -121,7 +121,7 @@ class Corporation extends BaseEsi {
             array_push($assets, $db_asset);
         }
 
-        CorporationAsset::whereDate('updated_at', '<', $update_date);
+        CorporationAsset::whereDate('updated_at', '<', $update_date)->delete();
 
         return $assets;
     }
@@ -151,7 +151,7 @@ class Corporation extends BaseEsi {
             array_push($assets, $db_asset);
         }
 
-        CorporationTitles::whereDate('updated_at', '<', $update_date);
+        CorporationTitles::whereDate('updated_at', '<', $update_date)->delete();
 
         return $assets;
     }
@@ -196,7 +196,7 @@ class Corporation extends BaseEsi {
             array_push($assets, $db_asset);
         }
 
-        CorporationStructures::whereDate('updated_at', '<', $update_date);
+        CorporationStructures::whereDate('updated_at', '<', $update_date)->delete();
 
         return $assets;
     }

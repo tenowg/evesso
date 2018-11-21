@@ -60,7 +60,7 @@ class Assets extends BaseEsi {
 
         if (count($assets) > 0) {
             $date = $assets[0]->updated_at;
-            CharacterAssets::whereUpdatedAt("<", $date)->whereCharacterId($sso->character_id)->delete();
+            CharacterAssets::where("updated_at", "<", $date)->whereCharacterId($sso->character_id)->delete();
         }
     }
 }
