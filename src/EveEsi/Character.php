@@ -124,7 +124,7 @@ class Character extends BaseEsi {
         
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_notifications-' . $sso->character_id]);
 
-        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS, $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_NOTIFICATIONS, $expires);
         if (!$return) {
             return CharacterNotifications::whereCharacterId($sso->character_id)->get()->toArray();
         }
