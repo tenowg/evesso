@@ -13,7 +13,6 @@ use EveSSO\EveSSO;
 use EveSSO\AlliancePublic;
 
 use EveEsi\Scopes;
-use EveSSO\Exceptions\InvalidScopeException;
 
 class Alliance extends BaseEsi {
     /**

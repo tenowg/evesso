@@ -22,6 +22,7 @@ namespace EveEsi {
         const MAIL_ORGANIZE = 'esi-mail.organize_mail.v1';
         const CONTACTS_CHARACTER_READ = 'esi-characters.read_contacts.v1';
         const READ_NOTIFICATIONS = 'esi-characters.read_notifications.v1';
+        const READ_FLEET = 'esi-fleets.read_fleet.v1';
         const ALL_SCOPES= [
             READ_CORP_CONTRACTS,
             READ_PERSONAL_CONTRACTS,
@@ -38,6 +39,7 @@ namespace EveEsi {
             READ_CORP_STRUCTURES,
             READ_CORP_TITLES,
             READ_CORP_INDUSTRY_JOBS,
+            READ_FLEET,
             MAIL_READ,
             MAIL_SEND,
             MAIL_ORGANIZE,
