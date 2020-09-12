@@ -3,8 +3,8 @@
     "description": "SSO extension for EVE Online",
     "type": "library",
     "require": {
-        "socialiteproviders/manager": "^3.3",
-        "laravel/socialite": "^3.0"
+        "socialiteproviders/manager": "^3.6",
+        "laravel/socialite": "^5.0"
     },
     "license": "MIT",
     "autoload": {
