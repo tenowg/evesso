@@ -32,9 +32,13 @@ class Wallet extends BaseEsi {
             return $return;
         }
 
-        $balance = CharacterBalance::updateOrCreate(['character_id' => $sso->character_id], ['balance' => $return]);
+        if (!is_null($return))
+        {
+            $balance = CharacterBalance::updateOrCreate(['character_id' => $sso->character_id], ['balance' => $return]);
+            return $balance;
+        }
 
-        return $balance;
+        return null;
     }
 
     public function getCharacterJournal($character_id, $access_token, $page = 1) {
