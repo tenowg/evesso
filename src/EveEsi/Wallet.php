@@ -23,10 +23,10 @@ class Wallet extends BaseEsi {
     }
 
     public function getCharacterBalance(EveSSO $sso) {
-        $uri = sprintf('characters/%s/wallet/', $character_id);
+        $uri = sprintf('characters/%s/wallet/', $sso->character_id);
 
         $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_balance-' . $sso->character_id]);
-        $return = $this->esi->callEsiAuth($access_token, $uri, [], Scopes::READ_CHARACTER_WALLET, $expires);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_WALLET, $expires);
 
         if (!$this->commit_data) {
             return $return;
