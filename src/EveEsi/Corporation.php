@@ -21,7 +21,7 @@ use EveSSO\CorporationPublic;
 use EveSSO\CorporationBlueprints;
 use EveSSO\CorporationAsset;
 use EveSSO\CorporationTitles;
-use App\CorporationStructures;
+use EveSSO\CorporationStructures;
 
 class Corporation extends BaseEsi {
     /**
@@ -173,19 +173,19 @@ class Corporation extends BaseEsi {
         $assets = array();
         $update_date = Carbon::now();
         foreach($return as $asset) {
-            if (array_key_exists($asset, 'fuel_expires')) {
+            if (array_key_exists('fuel_expires', $asset)) {
                 $asset['fuel_expires'] = new Carbon($asset['fuel_expires']);
             }
-            if (array_key_exists($asset, 'next_reinforce_apply')) {
+            if (array_key_exists('next_reinforce_apply', $asset)) {
                 $asset['next_reinforce_apply'] = new Carbon($asset['next_reinforce_apply']);
             }
-            if (array_key_exists($asset, 'state_timer_end')) {
+            if (array_key_exists('state_timer_end', $asset)) {
                 $asset['state_timer_end'] = new Carbon($asset['state_timer_end']);
             }
-            if (array_key_exists($asset, 'state_timer_start')) {
+            if (array_key_exists('state_timer_start', $asset)) {
                 $asset['state_timer_start'] = new Carbon($asset['state_timer_start']);
             }
-            if (array_key_exists($asset, 'unanchors_at')) {
+            if (array_key_exists('unanchors_at', $asset)) {
                 $asset['unanchors_at'] = new Carbon($asset['unanchors_at']);
             }
 

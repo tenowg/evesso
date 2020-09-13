@@ -35,7 +35,7 @@ class Fleets extends BaseEsi {
             return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_FLEET);
         }
         
-        $return = $this->esi->callEsi($sso, $uri, [], Scopes::READ_FLEET);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_FLEET);
 
         if (!$return) {
             return CharacterFleet::whereCharacterId($sso->character_id)->get();

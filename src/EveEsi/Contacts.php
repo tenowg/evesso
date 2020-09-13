@@ -44,11 +44,11 @@ class Contacts extends BaseEsi {
             return CharacterContacts::whereCharacterId($sso->character_id)->get()->toArray();
         }
 
-        $contracts = array();
+        $contacts = array();
         foreach($return as $contact) {
             $contact['character_id'] = $sso->character_id;
-            array_push($contracts, CharacterContacts::updateOrCreate(['contact_id' => $contact['contact_id'], 'character_id' => $sso->character_id], $contract));
+            array_push($contacts, CharacterContacts::updateOrCreate(['contact_id' => $contact['contact_id'], 'character_id' => $sso->character_id], $contact));
         }
-        return $contracts;
+        return $contacts;
     }
 }

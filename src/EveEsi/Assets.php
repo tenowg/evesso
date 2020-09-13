@@ -29,7 +29,7 @@ class Assets extends BaseEsi {
             return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_ASSETS, null, 'POST', $ids);
         }
 
-        $return = $this->esi->callEsiAuth($sso, $uri, [], null, 'POST', $ids);
+        $return = $this->esi->callEsiAuth($sso, $uri, [], null, null, 'POST', $ids);
 
         return $return;
     }

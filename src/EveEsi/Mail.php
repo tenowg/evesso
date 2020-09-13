@@ -12,6 +12,8 @@ use EveEsi\Scopes;
 use EveSSO\Exceptions\InvalidScopeException;
 
 use Carbon\Carbon;
+use EveSSO\CorporationContract;
+use EveSSO\EsiExpireTimes;
 
 class Mail extends BaseEsi {
     /**
@@ -41,7 +43,7 @@ class Mail extends BaseEsi {
             $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_mail-' . $sso->character_id]);
             $return = $this->esi->callEsiAuth($sso, $uri, [], Scopes::MAIL_READ, $expires);
             if (!$return) {
-                return CorporationContract::whereCorporationId($public->corporation_id)->get()->toArray();
+                return MailHeader::whereCharacterId($sso->character_id)->get()->toArray();
             } else {
                 $mail_headers = array();
                 foreach($return as $mail_header) {
@@ -83,7 +85,7 @@ class Mail extends BaseEsi {
      * scopes required: esi-mail.organize_mail.v1
      * method: delete
      */
-    public function deleteMail(EveSSO $sso, number $mail_id) {
+    public function deleteMail(EveSSO $sso, $mail_id) {
         $uri = sprintf('characters/%s/mail/%s/', $sso->character_id, $mail_id);
 
         return $this->esi->callEsiAuth($sso, $uri, [], Scopes::MAIL_ORGANIZE, null, 'DELETE');
@@ -93,7 +95,7 @@ class Mail extends BaseEsi {
      * scopes required: esi-mail.read_mail.v1
      * method: get
      */
-    public function getMail(EveSSO $sso, number $mail_id) {
+    public function getMail(EveSSO $sso, $mail_id) {
         $uri = sprintf('characters/%s/mail/%s/', $sso->character_id, $mail_id);
 
         return $this->esi->callEsiAuth($sso, $uri, [], Scopes::MAIL_READ);
@@ -103,7 +105,7 @@ class Mail extends BaseEsi {
      * scopes required: esi-mail.organize_mail.v1
      * method: put
      */
-    public function updateMail(EveSSO $sso, number $mail_id) {
+    public function updateMail(EveSSO $sso, $mail_id) {
         $uri = sprintf('characters/%s/mail/%s/', $sso->character_id, $mail_id);
 
         $this->esi->callEsiAuth($sso, $uri, [], Scopes::MAIL_ORGANIZE, null, 'PUT');
@@ -134,7 +136,7 @@ class Mail extends BaseEsi {
      * scopes required: esi-mail.organize_mail.v1
      * method: delete
      */
-    public function deleteMailLabel(EveSSO $sso, number $label_id) {
+    public function deleteMailLabel(EveSSO $sso, $label_id) {
         $uri = sprintf('characters/%s/mail/labels/%s/', $sso->character_id);
 
         $this->esi->callEsiAuth($sso, $uri, [], Scopes::MAIL_ORGANIZE, null, 'DELETE');

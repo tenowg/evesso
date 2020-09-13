@@ -69,7 +69,7 @@ class Contracts extends BaseEsi {
      * requires scope: esi-contracts.read_corporation_contracts.v1
      * @return array
      */
-    public function getPersonalContractItems(EvSSO $sso, number $contract_id) {
+    public function getPersonalContractItems(EveSSO $sso, $contract_id) {
         $uri = sprintf('characters/%s/contracts/%s/items/', $sso->character_id, $contract_id);
         return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_PERSONAL_CONTRACTS);
     }
@@ -116,8 +116,8 @@ class Contracts extends BaseEsi {
      * requires scope: esi-contracts.read_corporation_contracts.v1
      * @return array
      */
-    public function getCorporationContractItems(EvSSO $sso, number $contract_id) {            
-        $items = $this->char_esi->getCharacterPublic($sso);
+    public function getCorporationContractItems(EveSSO $sso, $contract_id) {            
+        $public = $this->char_esi->getCharacterPublic($sso);
         if ($public instanceof CharacterPublic) {
             $uri = sprintf('corporations/%s/contracts/%s/items/', $public->corporation_id, $contract_id);
             return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CORP_CONTRACTS);

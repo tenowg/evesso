@@ -3,9 +3,6 @@
 namespace EveEsi;
 
 use Socialite;
-// use App\User;
-// use App\Tokens;
-// use App\Applicant;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use EveSSO\EveSSO;
@@ -35,7 +32,7 @@ class Esi {
     }
 
     /**
-     * @return boolean || object (boolean false will indicate Etag)
+     * @return mixed boolean || object (boolean false will indicate Etag)
      */
     public function callEsiAuth(EveSSO $user, $uri, array $params, string $scope = null, EsiExpireTimes $etag = null, string $method = 'GET', $body = null, $recursive = false) {
         if ($scope != null && !$this->hasScope($user, $scope)) {

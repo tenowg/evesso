@@ -21,9 +21,9 @@ class Skills extends BaseEsi {
         parent::__construct();
     }
 
-    public function getCharacterSkills($character_id, $access_token) {
-        $uri = sprintf('characters/%s/skills/', $character_id);
+    public function getCharacterSkills(EveSSO $sso) {
+        $uri = sprintf('characters/%s/skills/', $sso->character_id);
 
-        return $this->esi->callEsiAuth($access_token, $uri, [], Scopes::READ_CHARACTER_SKILLS);
+        return $this->esi->callEsiAuth($sso, $uri, [], Scopes::READ_CHARACTER_SKILLS);
     }
 }
