@@ -18,7 +18,7 @@ class CreateEsiExpireTimesTable extends Migration
             Schema::connection($connection)->create('esi_expire_times', function (Blueprint $table) {
                 $table->string('esi_name');
                 $table->integer('expires')->default(-100);
-                $table->string('etag')->default('');
+                $table->string('etag')->nullable();
                 $table->timestamps();
 
                 $table->primary('esi_name');

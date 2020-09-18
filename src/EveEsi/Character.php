@@ -35,7 +35,6 @@ class Character extends BaseEsi {
      * requires scope: esi-characters.read_titles.v1
      */
     public function getTitles(EveSSO $sso) {
-        //if ($this->hasScope($sso, Scopes::READ_CHARACTER_TITLES)) {
         $public = $this->getCharacterPublic($sso);
         $uri = sprintf('characters/%s/titles/', $sso->character_id);
         if ($this->commit_data) {
@@ -57,48 +56,51 @@ class Character extends BaseEsi {
     /**
      * @return CharacterPublic 
      */
-    public function getCharacterPublic($character_id) {
-        if ($character_id instanceof EveSSO) {
-            $character_id = $character_id->character_id;
-        }
-        
-        $uri = sprintf('characters/%s/', $character_id);
+    public function getCharacterPublic(EveSSO $sso) {        
+        $uri = sprintf('characters/%s/', $sso->character_id);
 
-        $return = $this->esi->callEsi($uri, []);
-        if ($this->commit_data) {
-            // First get the existing if it exists
-            $character = CharacterPublic::find($character_id);
-            if ($character != null) {
-                if (!$character->expired()) {
-                    return $character;
-                }
-                // update the entry
-                $character->alliance_id = array_key_exists('alliance_id', $return) ? $return['alliance_id'] : null; 
-                $character->corporation_id = $return['corporation_id'];
-                $character->description = array_key_exists('description', $return) ? $return['description'] : null;
-                $character->faction_id = array_key_exists('faction_id', $return) ? $return['faction_id'] : null;
-                $character->security_status = array_key_exists('security_status', $return) ? $return['security_status'] : null;
-
-                $character->save();
-            } else {
-                $character = CharacterPublic::create([
-                    'character_id' => $character_id,
-                    'alliance_id' => array_key_exists('alliance_id', $return) ? $return['alliance_id'] : null,
-                    'ancestry_id' => array_key_exists('ancestry_id', $return) ? $return['ancestry_id'] : null,
-                    'birthday' => new Carbon($return['birthday']),
-                    'bloodline_id' => $return['bloodline_id'],
-                    'corporation_id' => $return['corporation_id'],
-                    'description' => array_key_exists('description', $return) ? $return['description'] : null,
-                    'faction_id' => array_key_exists('faction_id', $return) ? $return['faction_id'] : null,
-                    'gender' => $return['gender'],
-                    'name' => $return['name'],
-                    'race_id' => $return['race_id'],
-                    'security_status' => array_key_exists('security_status', $return) ? $return['security_status'] : null
-                ]);
-            }
-            return $character;
+        $expires = EsiExpireTimes::firstOrCreate(['esi_name' => 'get_character_public-' . $sso->character_id]);
+        $return = $this->esi->callEsi($uri, [], $expires);
+ 
+        // ESI didn't find the character we are looking for, so cancel for now
+        if (is_null($return)) {
+            return null;
         }
-        return $return;
+
+        // We are not commiting data to the database right now, so just return the information found
+        if (!$this->commit_data) {
+            return $return;
+        }
+
+        // First get the existing if it exists
+        $character = CharacterPublic::find($sso->character_id);
+
+        if ($character != null) {
+            // update the entry
+            $character->alliance_id = array_key_exists('alliance_id', $return) ? $return['alliance_id'] : null; 
+            $character->corporation_id = $return['corporation_id'];
+            $character->description = array_key_exists('description', $return) ? $return['description'] : null;
+            $character->faction_id = array_key_exists('faction_id', $return) ? $return['faction_id'] : null;
+            $character->security_status = array_key_exists('security_status', $return) ? $return['security_status'] : null;
+
+            $character->save();
+        } else {
+            $character = CharacterPublic::create([
+                'character_id' => $sso->character_id,
+                'alliance_id' => array_key_exists('alliance_id', $return) ? $return['alliance_id'] : null,
+                'ancestry_id' => array_key_exists('ancestry_id', $return) ? $return['ancestry_id'] : null,
+                'birthday' => new Carbon($return['birthday']),
+                'bloodline_id' => $return['bloodline_id'],
+                'corporation_id' => $return['corporation_id'],
+                'description' => array_key_exists('description', $return) ? $return['description'] : null,
+                'faction_id' => array_key_exists('faction_id', $return) ? $return['faction_id'] : null,
+                'gender' => $return['gender'],
+                'name' => $return['name'],
+                'race_id' => $return['race_id'],
+                'security_status' => array_key_exists('security_status', $return) ? $return['security_status'] : null
+            ]);
+        }
+        return $character;
     }
 
     public function getCspa(EveSSO $sso, EveSSO ...$receivers) {

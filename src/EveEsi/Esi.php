@@ -2,13 +2,13 @@
 
 namespace EveEsi;
 
-use Socialite;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use EveSSO\EveSSO;
 use EveEsi\Scopes;
 use EveSSO\EsiExpireTimes;
 use EveSSO\Exceptions\InvalidScopeException;
+use Socialite;
 
 class Esi {
     private $base_url;
@@ -49,6 +49,12 @@ class Esi {
         );
 
         if ($etag != null) {
+            if (is_null($etag->expires))
+            {
+                $etag->save();
+                $etag->refresh();
+            }
+            
             if (!$etag->expired()) {
                 return null;
             }
@@ -96,16 +102,46 @@ class Esi {
         return $body_res;
     }
 
-    public function callEsi($uri, array $params) {
+    public function callEsi($uri, array $params, EsiExpireTimes $etag = null) {
         $client = new Client();
 
         $headers = array(
             'User-Agent' => config('eve-sso.useragent')
         );
 
+        if (!is_null($etag)) {
+            if (is_null($etag->expires))
+            {
+                $etag->save();
+                $etag->refresh();
+            }
+            if (!$etag->expired()) { 
+                return null;
+            }
+
+            if (!is_null($etag->etag))
+            {
+                $headers['If-None-Match'] = $etag->etag;
+            }
+        }        
+
         $options = array('headers' => $headers, 'query' => $params);
 
         $res = $client->request('GET', $this->base_url . $uri, $options);
+
+        $status = $res->getStatusCode();
+        if ($status == 304 && $etag != null) {
+            $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));
+            $etag->save();
+            return null;
+        } else if ($status == 403 || $status == 401 || $status == 404 || $status == 420 || $status == 500) {
+            // Forbidden
+            return null;
+        } else if ($etag != null) {
+            $etag->etag = $res->getHeader('ETag')[0]; // get headers...
+            $etag->expires = Carbon::now()->tz('UTC')->diffInSeconds(new Carbon($res->getHeader('Expires')[0]));
+            $etag->save();
+        }
         
         return json_decode($res->getBody(), true);
     }

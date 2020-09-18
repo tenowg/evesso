@@ -34,6 +34,7 @@ class EsiExpireTimes extends EsiModel
 
     public function expired() {
         $expires_at = $this->updated_at->copy()->addSeconds($this->expires);
+        //dd($this->updated_at, $this->updated_at->copy()->addSeconds($this->expires), $this->expires, $this);
         return $expires_at->lt(new Carbon());
     }
 }

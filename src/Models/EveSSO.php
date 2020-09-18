@@ -30,6 +30,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\EveSSO\EveSSO whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \EveSSO\CharacterPublic $characterPublic
+ * @property-read \EveSSO\CharacterBalance $balance
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\CharacterContacts[] $contacts
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\PersonalContract[] $contracts
  * @property-read \Illuminate\Database\Eloquent\Collection|\EveSSO\MailHeader[] $mailheaders
@@ -107,5 +108,9 @@ class EveSSO extends EsiModel
 
     public function industryJobs() {
         return $this->hasMany('EveSSO\CharacterIndustryJobs', 'isntaller_id', 'character_id');
+    }
+
+    public function balance() {
+        return $this->hasOne('EveSSO\CharacterBalance', 'character_id', 'character_id');
     }
 }
